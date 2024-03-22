@@ -1,0 +1,11 @@
+
+”python:S1192"ODefine a constant instead of duplicating this literal "Agregar Arista" 3 times.(›‡Ê‚8ØêÐ¡å1J$566f00be-2045-4d36-91df-712c86f3f6d3
+’python:S1192"MDefine a constant instead of duplicating this literal "Agregar Nodo" 3 times.(›‡Ê‚8ÙêÐ¡å1J$0601b464-0f5f-4cb0-97b2-e55269c663b8
+œpython:S1192"WDefine a constant instead of duplicating this literal "Seleccione la acciÃ³n:" 3 times.(›‡Ê‚8ÚêÐ¡å1J$dda32d80-5ac1-4bd0-aba9-8265621041d5
+ypython:S10666"/Merge this if statement with the enclosing one.(³Êšæúÿÿÿÿ8ÜêÐ¡å1J$91964358-b968-4167-a798-c8337af98e79
+tpython:S1066{"/Merge this if statement with the enclosing one.(íÕ€–8ÝêÐ¡å1J$c3a03da3-b432-49ce-bdd4-553f638fb6b7
+zpython:S1066‘"/Merge this if statement with the enclosing one.(œ€¾©ÿÿÿÿÿ8ÝêÐ¡å1J$9bee28ef-f5b2-483d-b8a6-aad556d6b8e3
+cpython:S125"Remove this commented out code.(î¥ýä8ßêÐ¡å1J$4ae9532f-4bf0-4bc1-8fe7-91bcde990097
+žpython:S3776"TRefactor this function to reduce its Cognitive Complexity from 16 to the 15 allowed.(˜¨ýåøÿÿÿÿ8âêÐ¡å1J$2cad5d4f-d85f-4c05-a9b4-829ca62eb5a1
+python:S2836)"5Add a "break" statement or remove this "else" clause.(³£œ‰øÿÿÿÿ8äêÐ¡å1J$45ac388a-6d61-4323-a033-8d1c6d009632
+spython:S1940$")Use the opposite operator ("!=") instead.(Ô¹ÅŒùÿÿÿÿ8åêÐ¡å1J$ffb0fbe9-1885-4f37-b50a-2c0fc4f612aa
