@@ -50,8 +50,6 @@ def random_graph(num_nodes, directed=False, weighted=False, connected=False, com
                 nodes[i]["linkedTo"].append({"nodeId": nodes[j]["id"], "weight": 0})
                 if not directed:
                     nodes[j]["linkedTo"].append({"nodeId": nodes[i]["id"], "weight": 0})
-
-    print(nodes)
     return nodes
 
 # Ejemplo de uso:
@@ -65,7 +63,6 @@ def custom_graph(elements):
         global counter
         counter = Elements.generate_numeric_guid(counter)
         nombre = st.text_input("Ingrese el nombre del nodo:")
-        print(nombre)
         if nombre != "":
             repetido = False
             for element in elements:
@@ -75,13 +72,10 @@ def custom_graph(elements):
             if not repetido:
                 elements.add_node(Elements.get_elements(), counter, nombre)
                 counter += 1  # Incrementar el contador para el próximo nodo
-                print(Elements.get_elements())  # Mostrar los elementos para depurar
             else:
                 st.write("Ya existe un nodo con ese nombre")
-                print(Elements.get_elements())  # Mostrar los elementos para depurar
 
 def manual_conection(elements):
-    print(elements, "Conexion")
     # Obtener los nombres de los nodos
     opciones = []
     for element in elements:
@@ -126,4 +120,3 @@ def manual_conection(elements):
             # Mostrar la conexión agregada
             st.success(f"Conexión agregada entre '{nodo_origen}' y '{nodo_destino}' con un peso de {peso}.")
             st.json({"conexion": {"nodo_origen": elemento_origen, "nodo_destino": elemento_destino}})
-            print(elements)

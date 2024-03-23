@@ -18,21 +18,7 @@ def new_grafo_menu():
             selected_option_1 = st.selectbox(f"Seleccione la opción que desea", options_1, index=0)
             if selected_option_1 is not None:
                 if selected_option_1 == "Agregar Nodo":
-                    global counter
-                    counter = Elements.generate_numeric_guid(counter)
-                    nombre = st.text_input("Ingrese el nombre del nodo:")
-                    if nombre != "":
-                        repetido = False
-                        for element in Elements.get_elements():
-                            if 'data' in element and 'label' in element['data'] and nombre == element['data']["label"]:
-                                repetido = True
-                        if repetido is False:
-                            change = Elements.add_node(Elements.get_elements(), counter, nombre)
-                            Elements.set_elements(change)
-                            st.success(f"Nodo '{nombre}' agregado correctamente")
-                            print(Elements.get_elements(), "elementos")
-                        else:
-                            st.warning("Ya existe un nodo con ese nombre")
+                    add_node()
                 elif selected_option_1 == "Agregar Arista":
                     graph_generator.manual_conection(Elements.get_elements())
         if selected_option == "Aleatorio":
@@ -72,20 +58,7 @@ def edit_nodo_menu():
     selected_option = st.sidebar.selectbox("Seleccionar tipo de edición de nodo", options, index=0)
 
     if selected_option == "Agregar":
-        global counter
-        counter = Elements.generate_numeric_guid(counter)
-        nombre = st.text_input("Ingrese el nombre del nodo:")
-        if nombre != "":
-            repetido = False
-            for element in Elements.get_elements():
-                if 'data' in element and 'label' in element['data'] and nombre == element['data']["label"]:
-                    repetido = True
-            if not repetido:
-                change = Elements.add_node(Elements.get_elements(), counter, nombre)
-                Elements.set_elements(change)
-                st.success(f"Nodo '{nombre}' agregado correctamente")
-            else:
-                st.warning("Ya existe un nodo con ese nombre")
+        add_node()
     elif selected_option == "Eliminar":
         # Obtener los nombres de los nodos que tienen la clave 'label'
         opciones = []
@@ -110,6 +83,22 @@ def edit_nodo_menu():
                 label_container.empty()
         else:
             st.warning("No hay nodos disponibles para eliminar.")
+
+def add_node():
+    global counter
+    counter = Elements.generate_numeric_guid(counter)
+    nombre = st.text_input("Ingrese el nombre del nodo:")
+    if nombre != "":
+        repetido = False
+        for element in Elements.get_elements():
+            if 'data' in element and 'label' in element['data'] and nombre == element['data']["label"]:
+                repetido = True
+        if not repetido:
+            change = Elements.add_node(Elements.get_elements(), counter, nombre)
+            Elements.set_elements(change)
+            st.success(f"Nodo '{nombre}' agregado correctamente")
+        else:
+            st.warning("Ya existe un nodo con ese nombre")
 
 def edit_arco_menu():
     options = ["Agregar", "Editar", "Eliminar"]

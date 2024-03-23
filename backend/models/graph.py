@@ -6,8 +6,11 @@ from streamlit_react_flow import react_flow
 from documents.saved import *
 
 elementos = []
+created = False
 
 class Elements:
+
+
     def get_elements():
         global elementos
         return elementos
@@ -15,6 +18,14 @@ class Elements:
     def set_elements(elements):
         global elementos
         elementos = elements
+
+    def get_created():
+        global created
+        return created
+
+    def set_created(c):
+        global created
+        created = c
 
     def find_index_node_by_label(label, elements):
         elements = create_elements_from_list(elements)

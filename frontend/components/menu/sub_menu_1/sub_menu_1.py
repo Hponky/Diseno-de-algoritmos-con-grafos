@@ -5,7 +5,6 @@ from backend.utils import file_json
 from backend.models.graph import Elements
 from backend.generators import json_elements
 
-
 def file_menu():
     st.subheader("Seleccionaste el menu de archivo")
     # Opciones del submenú "Archivo"
@@ -15,21 +14,26 @@ def file_menu():
 
     if selected_option is not None:
         if selected_option == "Nuevo Grafo":
-            elementos = []
-            Elements.set_elements(elementos)
+            if not Elements.get_created():
+                Elements.set_elements([])
             sub_menu_2.new_grafo_menu()
+            Elements.set_created(True)
         elif selected_option == "Exportar Datos":
             st.write(f"Seleccionaste la opción de menu: {selected_option}")
             sub_menu_2.export_data_menu()
+            Elements.set_created(False)
         elif selected_option == "Importar Datos":
             st.write(f"Seleccionaste la opción de menu: {selected_option}")
             elements = []
             Elements.set_elements(elements)
             Elements.open_txt()
+            Elements.set_created(False)
         elif selected_option == "Abrir":
             st.write(f"Seleccionaste la opción de menu: {selected_option}")
             Elements.open_json()
+            Elements.set_created(False)
         elif selected_option == "Guardar":
+            Elements.set_created(False)
             if Elements.get_elements() == []:
                 st.write("No existen elementos a guardar")
             else:
@@ -37,6 +41,7 @@ def file_menu():
                 st.write(f"Seleccionaste la opción: {selected_option}")
                 file_json.save_elements_to_json(elementos, "documents/saved")
         elif selected_option == "Guardar como":
+            Elements.set_created(False)
             if Elements.get_elements() == []:
                 st.write("No existen elementos a guardar")
             else:
@@ -47,8 +52,10 @@ def file_menu():
         elif selected_option == "Cerrar":
             elements = []
             Elements.set_elements(elements)
+            Elements.set_created(False)
             st.warning("Se ha cerrado el espacio de trabajo")
         elif selected_option == "Salir":
+            Elements.set_created(False)
             st.write("Cerrando pestaña...")
             # Redirigir a una página inexistente para cerrar la pestaña
             st.markdown("<meta http-equiv='refresh' content='0;URL=about:blank' />", unsafe_allow_html=True)

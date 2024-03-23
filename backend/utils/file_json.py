@@ -80,7 +80,7 @@ def save_elements_to_json_as(elements, directory, filename):
                 json.dump(graph_data, file)
 
         # Mostrar el nombre de archivo seleccionado
-        st.write(f"Se ha guardado el archivo con el nombre: {filename}.json")
+        st.success(f"Se ha guardado el archivo con el nombre: {filename}.json")
 
 def cerrar_ventana():
   st.write(f"<script>window.close()</script>")

@@ -45,7 +45,6 @@ def convert_to_save_elements(elements):
     return react_elements
 
 def convert_to_react_flow(elements):
-    print(elements,"Elementos recibidos")
     react_elements = []
     added_nodes = set()  # Conjunto para rastrear nodos ya agregados
 
