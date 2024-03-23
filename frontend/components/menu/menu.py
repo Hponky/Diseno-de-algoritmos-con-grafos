@@ -1,5 +1,5 @@
 import streamlit as st
-from .sub_menu_1.sub_menu_1 import *
+from frontend.components.menu.sub_menu_1.sub_menu_1 import *
 
 def create_menu_bar():
     # Opciones del menú

@@ -11,27 +11,25 @@ def file_menu():
     file_options = ["Nuevo Grafo", "Abrir", "Cerrar", "Guardar", "Guardar como", "Exportar Datos", "Importar Datos",
                     "Salir"]
     selected_option = st.sidebar.selectbox("Opciones de Archivo", file_options, index=1)
-
+    print(Elements.get_elements(), "Lo que llega a archivo")
     if selected_option is not None:
         if selected_option == "Nuevo Grafo":
-            if not Elements.get_created():
-                Elements.set_elements([])
             sub_menu_2.new_grafo_menu()
             Elements.set_created(True)
         elif selected_option == "Exportar Datos":
             st.write(f"Seleccionaste la opción de menu: {selected_option}")
             sub_menu_2.export_data_menu()
-            Elements.set_created(False)
+            Elements.set_created(True)
         elif selected_option == "Importar Datos":
             st.write(f"Seleccionaste la opción de menu: {selected_option}")
             elements = []
             Elements.set_elements(elements)
             Elements.open_txt()
-            Elements.set_created(False)
+            Elements.set_created(True)
         elif selected_option == "Abrir":
             st.write(f"Seleccionaste la opción de menu: {selected_option}")
             Elements.open_json()
-            Elements.set_created(False)
+            Elements.set_created(True)
         elif selected_option == "Guardar":
             Elements.set_created(False)
             if Elements.get_elements() == []:
@@ -72,7 +70,7 @@ def edit_menu():
         st.sidebar.subheader("Editar")
         # Opciones del submenú "Editar"
         edit_options = ["Deshacer", "Nodo", "Arista"]
-        selected_option = st.sidebar.selectbox("Opciones de Editar", edit_options, index=0)
+        selected_option = st.sidebar.selectbox("Opciones de Editar", edit_options, index=1)
         if selected_option is not None:
             st.write(f"Seleccionaste la opción de editar: {selected_option}")
             if selected_option == "Nodo":
@@ -82,9 +80,6 @@ def edit_menu():
             elif selected_option == "Deshacer":
                 Elements.set_elements(Elements.undo_last_change(Elements.get_elements()))
 
-        Elements.set_elements(json_elements.create_elements_from_list(Elements.get_elements()))
-        flow_styles = {"height": 500, "width": 800}
-        react_flow("graph", elements=Elements.get_elements(), flow_styles=flow_styles)
     else:
         st.subheader("Selecciona un archivo a editar, o crea un grafo")
 

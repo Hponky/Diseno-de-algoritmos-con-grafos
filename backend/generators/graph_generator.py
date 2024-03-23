@@ -13,8 +13,9 @@ def random_graph(num_nodes, directed=False, weighted=False, connected=False, com
         node_label = ''.join(random.choices(string.ascii_uppercase, k=3))  # Etiqueta aleatoria de 3 letras
         nodes.append({
             "id": node_id,
-            "label": node_label,
-            "data": {},
+            "type": 'input',
+            "data": {"label": node_label},
+            "position": {"x":random.randint(100,400), "y":random.randint(100,200)},
             "linkedTo": []
         })
 

@@ -21,7 +21,11 @@ def new_grafo_menu():
                     add_node()
                 elif selected_option_1 == "Agregar Arista":
                     graph_generator.manual_conection(Elements.get_elements())
+            Elements.set_elements(json_elements.transform_graph(Elements.get_elements()))
+            print(Elements.get_elements(), "nuevo grafo personalizado")
         if selected_option == "Aleatorio":
+            if not Elements.get_created():
+                Elements.set_elements([])
             num_nodes = st.number_input("Cantidad de nodos", min_value=1, value=5)
 
             directed = st.checkbox("Dirigido")
@@ -35,6 +39,7 @@ def new_grafo_menu():
                                                   connected=connected,
                                                   complete=complete)
             Elements.set_elements(grafo_aleatorio)
+            print(Elements.get_elements(), "nuevo grafo aleatorio")
 
         Elements.set_elements(json_elements.transform_graph(Elements.get_elements()))
         Elements.set_elements(json_elements.create_elements_from_list(Elements.get_elements()))
@@ -56,7 +61,6 @@ def export_data_menu():
 def edit_nodo_menu():
     options = ["Agregar", "Editar", "Eliminar"]
     selected_option = st.sidebar.selectbox("Seleccionar tipo de edición de nodo", options, index=0)
-
     if selected_option == "Agregar":
         add_node()
     elif selected_option == "Eliminar":
@@ -83,6 +87,9 @@ def edit_nodo_menu():
                 label_container.empty()
         else:
             st.warning("No hay nodos disponibles para eliminar.")
+    Elements.set_elements(json_elements.create_elements_from_list(Elements.get_elements()))
+    flow_styles = {"height": 500, "width": 800}
+    react_flow("graph", elements=Elements.get_elements(), flow_styles=flow_styles)
 
 def add_node():
     global counter
@@ -102,12 +109,16 @@ def add_node():
 
 def edit_arco_menu():
     options = ["Agregar", "Editar", "Eliminar"]
-    selected_option = st.sidebar.selectbox("Seleccionar tipo de edición de arista", options, index= 0)
+    selected_option = st.sidebar.selectbox("Seleccionar tipo de edición de arista", options, index=0)
+    tipo_arista = st.sidebar.radio("Tipo de arista", ["Dirigida", "No dirigida"])
+
     if selected_option is not None:
         st.write(f"Seleccionaste la opción de edición de arista: {selected_option}")
+        st.write(f"Tipo de arista seleccionada: {tipo_arista}")
+
         if selected_option == "Agregar":
             graph_generator.manual_conection(Elements.get_elements())
-        if selected_option == "Eliminar":
+        elif selected_option == "Eliminar":
             # Obtener los IDs de los nodos conectados
             nodos_conectados = set()
             for element in Elements.get_elements():
@@ -118,13 +129,13 @@ def edit_arco_menu():
 
             # Filtrar los nodos que tienen alguna conexión para los nodos de origen
             opciones_origen = [element['data']['label'] for element in Elements.get_elements()
-                               if
-                               'data' in element and 'label' in element['data'] and element['id'] in nodos_conectados]
+                               if 'data' in element and 'label' in element['data']
+                               and element['id'] in nodos_conectados]
 
             # Filtrar los nodos que tienen alguna conexión para los nodos de destino
             opciones_destino = [element['data']['label'] for element in Elements.get_elements()
-                                if
-                                'data' in element and 'label' in element['data'] and element['id'] in nodos_conectados]
+                                if 'data' in element and 'label' in element['data']
+                                and element['id'] in nodos_conectados]
 
             # Seleccionar nodo origen y destino para eliminar la conexión
             origen = st.selectbox("Selecciona el nodo de origen:", opciones_origen, index=0)
@@ -148,15 +159,23 @@ def edit_arco_menu():
                         if 'source' in element and 'target' in element:
                             if element['source'] == source_id and element['target'] == target_id and source_id != target_id:
                                 # No agregamos esta conexión a la lista de elementos actualizados
-                                st.success(f"Conexión de '{origen}' a '{destino}' eliminado correctamente")
+                                st.success(f"Conexión de '{origen}' a '{destino}' eliminada correctamente")
                                 found = True
                                 continue
                         # Agregamos todas las otras conexiones y nodos a la lista de elementos actualizados
                         updated_elements.append(element)
                     if not found:
                         st.warning("Seleccionaste una opción inválida")
+
                     # Actualizar los elementos en Elements
                     Elements.set_elements(updated_elements)
+
+        # Visualización de las aristas
+        react_flow(Elements.get_elements(), tipo_arista)
+        Elements.set_elements(json_elements.create_elements_from_list(Elements.get_elements()))
+        flow_styles = {"height": 500, "width": 800}
+        react_flow("graph", elements=Elements.get_elements(), flow_styles=flow_styles)
+
 
 
 def processes_menu():
