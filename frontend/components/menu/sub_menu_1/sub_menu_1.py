@@ -11,7 +11,6 @@ def file_menu():
     file_options = ["Nuevo Grafo", "Abrir", "Cerrar", "Guardar", "Guardar como", "Exportar Datos", "Importar Datos",
                     "Salir"]
     selected_option = st.sidebar.selectbox("Opciones de Archivo", file_options, index=1)
-    print(Elements.get_elements(), "Lo que llega a archivo")
     if selected_option is not None:
         if selected_option == "Nuevo Grafo":
             sub_menu_2.new_grafo_menu()

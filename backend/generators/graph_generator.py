@@ -53,11 +53,6 @@ def random_graph(num_nodes, directed=False, weighted=False, connected=False, com
                     nodes[j]["linkedTo"].append({"nodeId": nodes[i]["id"], "weight": 0})
     return nodes
 
-# Ejemplo de uso:
-# grafo_aleatorio = create_random_graph(num_nodes=5, directed=True, weighted=True, connected=True, complete=False)
-# print(grafo_aleatorio)
-
-
 def custom_graph(elements):
     # Botón para añadir nodo al grafo personalizado
     if st.button("Añadir nodo"):

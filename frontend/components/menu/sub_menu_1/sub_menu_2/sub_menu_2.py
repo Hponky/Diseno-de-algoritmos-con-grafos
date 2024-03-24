@@ -22,7 +22,6 @@ def new_grafo_menu():
                 elif selected_option_1 == "Agregar Arista":
                     graph_generator.manual_conection(Elements.get_elements())
             Elements.set_elements(json_elements.transform_graph(Elements.get_elements()))
-            print(Elements.get_elements(), "nuevo grafo personalizado")
         if selected_option == "Aleatorio":
             if not Elements.get_created():
                 Elements.set_elements([])
@@ -39,7 +38,6 @@ def new_grafo_menu():
                                                   connected=connected,
                                                   complete=complete)
             Elements.set_elements(grafo_aleatorio)
-            print(Elements.get_elements(), "nuevo grafo aleatorio")
 
         Elements.set_elements(json_elements.transform_graph(Elements.get_elements()))
         Elements.set_elements(json_elements.create_elements_from_list(Elements.get_elements()))
@@ -169,14 +167,6 @@ def edit_arco_menu():
 
                     # Actualizar los elementos en Elements
                     Elements.set_elements(updated_elements)
-
-        # Visualización de las aristas
-        react_flow(Elements.get_elements(), tipo_arista)
-        Elements.set_elements(json_elements.create_elements_from_list(Elements.get_elements()))
-        flow_styles = {"height": 500, "width": 800}
-        react_flow("graph", elements=Elements.get_elements(), flow_styles=flow_styles)
-
-
 
 def processes_menu():
     options = ["Proceso 1", "Proceso 2", "Proceso 3"]
