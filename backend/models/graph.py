@@ -139,8 +139,6 @@ class Elements:
                 txt_content = uploaded_file.getvalue().decode("utf-8")
                 st.text_area("Contenido TXT", value=txt_content, height=400)
                 Elements.set_elements(create_elements_from_json(uploaded_file))
-                Elements.set_elements(transform_graph(Elements.get_elements()))
-                Elements.set_elements(create_elements_from_list(Elements.get_elements()))
                 flow_styles = {"height": 500, "width": 800}
                 react_flow("graph", elements=Elements.get_elements(), flow_styles=flow_styles)
 

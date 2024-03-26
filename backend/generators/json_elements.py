@@ -150,6 +150,7 @@ def extract_edge_data(node_id, link):
         "target": target_id,
         "animated": True
     }
+
 def create_elements_from_json(uploaded_file):
     elements = []
     json_data = json.load(uploaded_file)
