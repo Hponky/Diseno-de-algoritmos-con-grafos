@@ -96,27 +96,6 @@ def convert_to_react_flow(elements):
 
     return react_elements
 
-def extract_node_data(node_data):
-    node_id = str(node_data["id"])
-    node_label = node_data.get("label", node_id)
-    node_type = node_data.get("type", "default")
-    node_position = node_data.get("coordenates", {"x": 0, "y": 0})
-    return {
-        "id": node_id,
-        "type": node_type,
-        "data": {"label": node_label},
-        "position": {"x": node_position["x"], "y": node_position["y"]}
-    }
-
-def extract_edge_data(node_id, link):
-    target_id = str(link["nodeId"])
-    return {
-        "id": f"edge-{node_id}-{target_id}",
-        "source": node_id,
-        "target": target_id,
-        "animated": True
-    }
-
 def transform_graph(elements):
     transformed_elements = []
     for element in elements:
@@ -124,7 +103,7 @@ def transform_graph(elements):
             transformed_elements.append({
                 'id': element['id'],
                 'type': element['type'],
-                'data': {'label': element['data']['label']},
+                'data': {'label': element['data']['label'], 'value':0},
                 'position': {'x': 0, 'y': 0},
                 'linkedTo': [] if 'linkedTo' not in element else element['linkedTo']
             })
@@ -143,6 +122,32 @@ def create_elements_from_list(data_list):
             elements.append(edge)
     return elements
 
+
+def extract_node_data(node_data):
+    node_id = int(node_data["id"])
+    node_label = node_data.get("label", node_id)
+    node_type = node_data.get("type", "default")
+    node_position = node_data.get("coordenates", {"x": 0, "y": 0})
+    linked_to = [{"nodeId": link["nodeId"], "weight": link.get("weight", 0)} for link in node_data.get("linkedTo", [])]
+    return {
+        "id": node_id,
+        "type": "default",
+        "style": { "background": '#ffcc50', "width": 75, "height": 75, "align-items": "center",
+                   "box-shadow": "-2px 10px 100px 3px rgba(255,255,255,0.25)", "text-shadow": "4px 4px 2px rgba(0,0,0,0.3)",
+                   "font-size":"30px", "border-radius": "50%"},
+        "data": {"label": node_label, "value": 0},
+        "position": {"x": node_position["x"], "y": node_position["y"]},
+        "linkedTo": linked_to
+    }
+
+def extract_edge_data(node_id, link):
+    target_id = str(link["nodeId"])
+    return {
+        "id": f"edge-{node_id}-{target_id}",
+        "source": node_id,
+        "target": target_id,
+        "animated": True
+    }
 def create_elements_from_json(uploaded_file):
     elements = []
 
@@ -153,8 +158,9 @@ def create_elements_from_json(uploaded_file):
         node = extract_node_data(node_data)
         elements.append(node)
 
-        linked_to = node_data.get("linkedTo", [])
+        linked_to = node_data.get("linkedTo")
         for link in linked_to:
             edge = extract_edge_data(node["id"], link)
             elements.append(edge)
+    print(elements, "lo que se abre en create_elements_from_json")
     return elements

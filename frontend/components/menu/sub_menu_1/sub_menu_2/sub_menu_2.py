@@ -60,6 +60,62 @@ def edit_nodo_menu():
     selected_option = st.sidebar.selectbox("Seleccionar tipo de edición de nodo", options, index=0)
     if selected_option == "Agregar":
         add_node()
+    elif selected_option == "Editar":
+        edit_options = ["Cambiar color", "Cambiar nombre", "Cambiar valor"]
+        selected_edit_option = st.sidebar.selectbox("Selecciona lo que deseas editar del nodo", edit_options, index=0)
+        if selected_edit_option == "Cambiar color":
+            color = st.color_picker('Elige un color', '#00f900')
+            # Muestra el color seleccionado
+            st.write('El color actual es', color)
+            opciones = []
+
+            for element in Elements.get_elements():
+                if 'data' in element and 'label' in element['data']:
+                    opciones.append(element['data']['label'])
+
+            index = -1
+            label = st.selectbox(f"Seleccione el nodo que desea colorear", opciones, index)
+
+            if label is not None and st.button("Confirmar"):
+                node_index = Elements.find_index_node_by_label(label, Elements.get_elements())
+                if node_index is not -1:
+                    st.success("Se ha coloreado el nodo satisfactoriamente")
+                    Elements.get_elements()[node_index]['style']['background'] = color
+
+        if selected_edit_option == "Cambiar nombre":
+            color = st.text_input('Escribe el nuevo nombre')
+            opciones = []
+
+            for element in Elements.get_elements():
+                if 'data' in element and 'label' in element['data']:
+                    opciones.append(element['data']['label'])
+
+            index = -1
+            label = st.selectbox(f"Seleccione el nodo que desea renombrar", opciones, index)
+
+            if label is not None and st.button("Confirmar"):
+                node_index = Elements.find_index_node_by_label(label, Elements.get_elements())
+                if node_index is not -1:
+                    st.success("Se ha renombrado el nodo satisfactoriamente")
+                    Elements.get_elements()[node_index]['data']['label'] = color
+
+        if selected_edit_option == "Cambiar valor":
+            color = st.number_input('Escribe el nuevo valor')
+            opciones = []
+
+            for element in Elements.get_elements():
+                if 'data' in element and 'label' in element['data']:
+                    opciones.append(element['data']['label'])
+
+            index = -1
+            label = st.selectbox(f"Seleccione el nodo que desea revaluar", opciones, index)
+
+            if label is not None and st.button("Confirmar"):
+                node_index = Elements.find_index_node_by_label(label, Elements.get_elements())
+                if node_index is not -1:
+                    st.success("Se ha revaluado el nodo satisfactoriamente")
+                    Elements.get_elements()[node_index]['data']['value'] = color
+
     elif selected_option == "Eliminar":
         # Obtener los nombres de los nodos que tienen la clave 'label'
         opciones = []
@@ -123,8 +179,9 @@ def edit_arco_menu():
 
 
 def obtener_nodos_conectados(elementos):
-    nodos_conectados_origen = {element.get('source') for element in elementos if 'source' in element}
+    nodos_conectados_origen = {int(element.get('source')) for element in elementos if 'source' in element}
     nodos_conectados_destino = {int(element.get('target')) for element in elementos if 'target' in element}
+    print(nodos_conectados_origen, nodos_conectados_destino, "obtener_nodos_conectados")
     return nodos_conectados_origen, nodos_conectados_destino
 
 
@@ -135,12 +192,18 @@ def filtrar_opciones(nodos_conectados, elementos):
 
 
 def encontrar_id_nodo(label, elementos):
-    return next((element['id'] for element in elementos if
+    return next(((element['id']) for element in elementos if
                  'data' in element and 'label' in element['data'] and element['data']['label'] == label), None)
 
 
 def eliminar_conexion():
+
+    #Elements.set_elements(json_elements.transform_graph(Elements.get_elements()))
+    #Elements.set_elements(json_elements.convert_to_react_flow(Elements.get_elements()))
+    #Elements.set_elements(json_elements.create_elements_from_list(Elements.get_elements()))
+    
     elementos = Elements.get_elements()
+    print(elementos, "elementos q se pueden eliminar")
     nodos_conectados_origen, nodos_conectados_destino = obtener_nodos_conectados(elementos)
 
     opciones_origen = filtrar_opciones(nodos_conectados_origen, elementos)
@@ -173,6 +236,8 @@ def eliminar_conexion():
                         st.warning("No se encontró la conexión para eliminar")
                 else:
                     st.warning("No se encontraron los nodos de origen y destino especificados")
+    else:
+        st.subheader("No hay aristas a eliminar")
 
 
 def actualizar_elementos_y_mostrar_flujo():

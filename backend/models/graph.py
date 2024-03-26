@@ -155,3 +155,10 @@ class Elements:
                 Elements.set_elements(create_elements_from_json(uploaded_file))
                 flow_styles = {"height": 500, "width": 800}
                 react_flow("graph", elements=Elements.get_elements(), flow_styles=flow_styles)
+
+
+    def define_styles(color):
+        style = { f"background": f'{color}', "width": 75, "height": 75, "align-items": "center",
+                   "box-shadow": "-2px 10px 100px 3px rgba(255,255,255,0.25)", "text-shadow": "4px 4px 2px rgba(0,0,0,0.6)",
+                   "font-size":"30px", "border-radius": "50%"}
+

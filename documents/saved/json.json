@@ -1,0 +1,46 @@
+{
+  "graph": [
+    {
+      "name": "G",
+      "data": [
+        {
+          "id": 1,
+          "label": "N1",
+          "data": {},
+          "type": " ",
+          "linkedTo": [
+            {
+              "nodeId": 2,
+              "weight": 120
+            }
+          ],
+          "radius": 0.4,
+          "coordenates": {
+            "x": 25,
+            "y": 34
+          }
+        },
+        {
+          "id": 2,
+          "label": "N2",
+          "data": {},
+          "type": "Object",
+          "linkedTo": [
+            {
+              "nodeId": 1,
+              "weight": 120
+            }
+          ],
+          "radius": 0.2,
+          "coordenates": {
+            "x": 37,
+            "y": 15
+          }
+        }
+      ]
+    }
+  ],
+  "generalData1": 100,
+  "generalData2": "Alg",
+  "generalData3": 300
+}
