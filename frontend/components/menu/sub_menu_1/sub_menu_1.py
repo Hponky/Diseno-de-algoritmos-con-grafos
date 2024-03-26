@@ -34,9 +34,8 @@ def file_menu():
             if Elements.get_elements() == []:
                 st.write("No existen elementos a guardar")
             else:
-                elementos = json_elements.convert_to_save_elements(Elements.get_elements())
                 st.write(f"Seleccionaste la opción: {selected_option}")
-                file_json.save_elements_to_json(elementos, "documents/saved")
+                file_json.save_elements_to_json(Elements.get_elements(), "documents/saved")
         elif selected_option == "Guardar como":
             Elements.set_created(False)
             if Elements.get_elements() == []:

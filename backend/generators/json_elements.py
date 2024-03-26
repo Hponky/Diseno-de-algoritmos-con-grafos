@@ -5,6 +5,8 @@ from streamlit_react_flow import react_flow
 
 def convert_to_save_elements(elements):
     react_elements = []
+    #e = convert_to_react_flow(elements)
+    #print(e, "asi llega a convert_to_save_elements")
     added_nodes = set()  # Conjunto para rastrear nodos ya agregados
     edge_ids = set()  # Conjunto para rastrear las IDs de los bordes agregados
 
@@ -150,17 +152,16 @@ def extract_edge_data(node_id, link):
     }
 def create_elements_from_json(uploaded_file):
     elements = []
-
     json_data = json.load(uploaded_file)
     nodes = json_data["graph"][0]["data"]
 
     for node_data in nodes:
-        node = extract_node_data(node_data)
-        elements.append(node)
+        if "label" in node_data:
+            node = extract_node_data(node_data)
+            elements.append(node)
+            linked_to = node_data.get("linkedTo")
+            for link in linked_to:
+                edge = extract_edge_data(node["id"], link)
+                elements.append(edge)
 
-        linked_to = node_data.get("linkedTo")
-        for link in linked_to:
-            edge = extract_edge_data(node["id"], link)
-            elements.append(edge)
-    print(elements, "lo que se abre en create_elements_from_json")
-    return elements
+    return elements if elements else nodes
