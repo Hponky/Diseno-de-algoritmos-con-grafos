@@ -107,6 +107,13 @@ def manual_conection(elements):
         elif elemento_origen is None or elemento_destino is None:
             st.warning("Los nodos de origen y destino deben estar presentes en el grafo.")
         else:
+            # Verificar si la conexión ya existe
+            if "linkedTo" in elemento_origen:
+                for link in elemento_origen["linkedTo"]:
+                    if link["nodeId"] == elemento_destino["id"]:
+                        st.warning("La conexión ya existe.")
+                        return
+
             # Agregar la conexión al nodo de origen
             if "linkedTo" not in elemento_origen:
                 elemento_origen["linkedTo"] = []
