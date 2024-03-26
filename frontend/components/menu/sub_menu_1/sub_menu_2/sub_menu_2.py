@@ -38,7 +38,6 @@ def new_grafo_menu():
                                                   connected=connected,
                                                   complete=complete)
             Elements.set_elements(grafo_aleatorio)
-
         Elements.set_elements(json_elements.transform_graph(Elements.get_elements()))
         Elements.set_elements(json_elements.create_elements_from_list(Elements.get_elements()))
         flow_styles = {"height": 500, "width": 800}
@@ -79,6 +78,7 @@ def edit_nodo_menu():
                 node_id = Elements.find_index_node_by_label(label, Elements.get_elements())
                 if node_id is not -1:
                     st.success("Se ha eliminado el nodo satisfactoriamente")
+                    print(node_id, "indice a eliminar")
                     Elements.get_elements().pop(node_id)
                     # Actualizar la lista de opciones y reinicializar el selectbox
                 opciones = [element.get("label", "") for element in Elements.get_elements() if 'data' in element and 'label' in element['data']]
