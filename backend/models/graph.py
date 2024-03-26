@@ -28,12 +28,15 @@ class Elements:
         created = c
 
     def find_index_node_by_label(label, elements):
-        create_elements_from_list(elements)
+        elements = create_elements_from_list(elements)
         for i, element in enumerate(elements):  # Utiliza enumerate para obtener tanto el índice como el elemento
             if 'data' in element and 'label' in element['data']:
                 if label == element['data']['label']:  # Utiliza == en lugar de 'is' para comparar cadenas
                     node_found = i
                     return node_found
+                    break  # Termina el bucle una vez que se ha encontrado el nodo
+            else:
+                print("El elemento no tiene la estructura esperada:", element)
         return -1
 
     def generate_numeric_guid(counter):
