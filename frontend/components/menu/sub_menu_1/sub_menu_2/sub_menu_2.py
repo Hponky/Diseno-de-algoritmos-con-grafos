@@ -109,7 +109,6 @@ def edit_arco_menu():
     options = ["Agregar", "Editar", "Eliminar"]
     selected_option = st.sidebar.selectbox("Seleccionar tipo de edición de arista", options, index=0)
     tipo_arista = st.sidebar.radio("Tipo de arista", ["Dirigida", "No dirigida"])
-
     if selected_option is not None:
         st.write(f"Seleccionaste la opción de edición de arista: {selected_option}")
         st.write(f"Tipo de arista seleccionada: {tipo_arista}")
@@ -117,56 +116,86 @@ def edit_arco_menu():
         if selected_option == "Agregar":
             graph_generator.manual_conection(Elements.get_elements())
         elif selected_option == "Eliminar":
-            # Obtener los IDs de los nodos conectados
-            nodos_conectados = set()
-            for element in Elements.get_elements():
-                if 'source' in element:
-                    nodos_conectados.add(element['source'])
-                if 'target' in element:
-                    nodos_conectados.add(element['target'])
+            # Eliminar la conexión entre los nodos
+            eliminar_conexion()
 
-            # Filtrar los nodos que tienen alguna conexión para los nodos de origen
-            opciones_origen = [element['data']['label'] for element in Elements.get_elements()
-                               if 'data' in element and 'label' in element['data']
-                               and element['id'] in nodos_conectados]
+    actualizar_elementos_y_mostrar_flujo()
 
-            # Filtrar los nodos que tienen alguna conexión para los nodos de destino
-            opciones_destino = [element['data']['label'] for element in Elements.get_elements()
-                                if 'data' in element and 'label' in element['data']
-                                and element['id'] in nodos_conectados]
 
-            # Seleccionar nodo origen y destino para eliminar la conexión
-            origen = st.selectbox("Selecciona el nodo de origen:", opciones_origen, index=0)
-            destino = st.selectbox("Selecciona el nodo de destino:", opciones_destino, index=0)
-            if st.button("Eliminar"):
-                if origen is not None and destino is not None:
-                    # Encontrar los IDs de los nodos de origen y destino
-                    source_id = ''
-                    target_id = ''
-                    for element in Elements.get_elements():
-                        if 'data' in element and 'label' in element['data']:
-                            if element['data']['label'] == origen:
-                                source_id = element['id']
-                            if element['data']['label'] == destino:
-                                target_id = element['id']
+def eliminar_conexion():
+    # Obtener los IDs de los nodos conectados para origen y destino por separado
+    nodos_conectados_origen = set()
+    nodos_conectados_destino = set()
+    for element in Elements.get_elements():
+        if 'source' in element:
+            nodos_conectados_origen.add(element['source'])
+        if 'target' in element:
+            nodos_conectados_destino.add(int(element['target']))
 
+    # Filtrar las opciones de origen
+    opciones_origen = [element['data']['label'] for element in Elements.get_elements()
+                       if 'data' in element and 'label' in element['data']
+                       and element['id'] in nodos_conectados_origen]
+
+    # Filtrar las opciones de destino
+    opciones_destino = [element['data']['label'] for element in Elements.get_elements()
+                        if 'data' in element and 'label' in element['data']
+                        and element['id'] in nodos_conectados_destino]
+
+    if opciones_origen and opciones_destino:
+        # Seleccionar nodo origen y destino para eliminar la conexión
+        origen = st.selectbox("Selecciona el nodo de origen:", opciones_origen, index=0)
+        destino = st.selectbox("Selecciona el nodo de destino:", opciones_destino, index=0)
+
+        if st.button("Eliminar"):
+            if origen is not None and destino is not None:
+                # Encontrar los IDs de los nodos de origen y destino
+                source_id = next((element['id'] for element in Elements.get_elements() if 'data' in element and 'label' in element['data'] and element['data']['label'] == origen), None)
+                target_id = next((element['id'] for element in Elements.get_elements() if 'data' in element and 'label' in element['data'] and element['data']['label'] == destino), None)
+
+                if source_id is not None and target_id is not None:
                     # Eliminar la conexión entre los nodos
-                    updated_elements = []
-                    found = False
-                    for element in Elements.get_elements():
-                        if 'source' in element and 'target' in element:
-                            if element['source'] == source_id and element['target'] == target_id and source_id != target_id:
-                                # No agregamos esta conexión a la lista de elementos actualizados
-                                st.success(f"Conexión de '{origen}' a '{destino}' eliminada correctamente")
-                                found = True
-                                continue
-                        # Agregamos todas las otras conexiones y nodos a la lista de elementos actualizados
-                        updated_elements.append(element)
-                    if not found:
-                        st.warning("Seleccionaste una opción inválida")
+                    updated_elements = [element for element in Elements.get_elements()
+                                        if not ('source' in element and 'target' in element
+                                                and element['source'] == source_id
+                                                and int(element['target']) == target_id)]
 
-                    # Actualizar los elementos en Elements
-                    Elements.set_elements(updated_elements)
+                    # Actualizar el linkedTo del nodo de origen después de eliminar la conexión
+                    for element in updated_elements:
+                        if element.get('id') == source_id:
+                            element['linkedTo'] = [link for link in element.get('linkedTo', []) if link.get('nodeId') != target_id]
+
+                    if len(updated_elements) < len(Elements.get_elements()):
+                        st.success(f"Conexión de '{origen}' a '{destino}' eliminada correctamente")
+                        # Actualizar los elementos en Elements
+                        Elements.set_elements(updated_elements)
+
+                        # Filtrar las nuevas opciones de origen y destino
+                        nodos_conectados_origen = set()
+                        nodos_conectados_destino = set()
+                        for element in updated_elements:
+                            if 'source' in element:
+                                nodos_conectados_origen.add(element['source'])
+                            if 'target' in element:
+                                nodos_conectados_destino.add(element['target'])
+
+                        opciones_origen = [element['data']['label'] for element in updated_elements
+                                           if 'data' in element and 'label' in element['data']
+                                           and element['id'] in nodos_conectados_origen]
+
+                        opciones_destino = [element['data']['label'] for element in updated_elements
+                                            if 'data' in element and 'label' in element['data']
+                                            and element['id'] in nodos_conectados_destino]
+                    else:
+                        st.warning("No se encontró la conexión para eliminar")
+                else:
+                    st.warning("No se encontraron los nodos de origen y destino especificados")
+
+def actualizar_elementos_y_mostrar_flujo():
+    Elements.set_elements(json_elements.create_elements_from_list(Elements.get_elements()))
+    flow_styles = {"height": 500, "width": 800}
+    react_flow("graph", elements=Elements.get_elements(), flow_styles=flow_styles)
+
 
 def processes_menu():
     options = ["Proceso 1", "Proceso 2", "Proceso 3"]

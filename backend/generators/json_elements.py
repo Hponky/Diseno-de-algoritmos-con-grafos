@@ -147,7 +147,6 @@ def create_elements_from_json(uploaded_file):
     elements = []
 
     json_data = json.load(uploaded_file)
-    print(json_data, "json neto")
     nodes = json_data["graph"][0]["data"]
 
     for node_data in nodes:
@@ -158,5 +157,4 @@ def create_elements_from_json(uploaded_file):
         for link in linked_to:
             edge = extract_edge_data(node["id"], link)
             elements.append(edge)
-    print(elements, "create elements  from json")
     return elements
