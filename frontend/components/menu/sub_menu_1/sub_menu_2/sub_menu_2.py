@@ -162,7 +162,7 @@ def edit_arco_menu():
         st.write(f"Tipo de arista seleccionada: {tipo_arista}")
 
         if selected_option == "Agregar":
-            graph_generator.manual_conection(Elements.get_elements())
+            graph_generator.manual_conection(Elements.get_elements(), tipo_arista)
         elif selected_option == "Eliminar":
             # Eliminar la conexión entre los nodos
             eliminar_conexion()

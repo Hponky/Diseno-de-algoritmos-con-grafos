@@ -71,7 +71,7 @@ def custom_graph(elements):
             else:
                 st.write("Ya existe un nodo con ese nombre")
 
-def manual_conection(elements):
+def manual_conection(elements, tipo_arista):
     # Obtener los nombres de los nodos
     opciones = []
     for element in elements:
@@ -117,9 +117,14 @@ def manual_conection(elements):
             # Agregar la conexión al nodo de origen
             if "linkedTo" not in elemento_origen:
                 elemento_origen["linkedTo"] = []
-            elemento_origen["linkedTo"].append({"nodeId": elemento_destino["id"], "weight": peso})
-            Elements.show_node_coordinates(Elements.get_elements())
 
+            # Definir el valor de "animated" según el tipo de arista
+            animated_value = tipo_arista == "Dirigida"
+            elements.append({'id': f'edge-{elemento_origen["id"]}-{elemento_destino["id"]}',
+                                            'source': f'{elemento_origen["id"]}', 'target': f'{elemento_destino["id"]}',
+                                            'animated': animated_value})
+            Elements.show_node_coordinates(Elements.get_elements())
             # Mostrar la conexión agregada
             st.success(f"Conexión agregada entre '{nodo_origen}' y '{nodo_destino}' con un peso de {peso}.")
             st.json({"conexion": {"nodo_origen": elemento_origen, "nodo_destino": elemento_destino}})
+
