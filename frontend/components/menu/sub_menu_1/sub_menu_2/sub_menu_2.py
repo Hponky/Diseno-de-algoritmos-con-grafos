@@ -38,11 +38,7 @@ def new_grafo_menu():
                                                   connected=connected,
                                                   complete=complete)
             Elements.set_elements(grafo_aleatorio)
-        Elements.set_elements(json_elements.transform_graph(Elements.get_elements()))
-        Elements.set_elements(json_elements.create_elements_from_list(Elements.get_elements()))
-        flow_styles = {"height": 500, "width": 800}
-        react_flow("graph", elements=Elements.get_elements(), flow_styles=flow_styles)
-
+        display_flow()
 
 def export_data_menu():
     options = ["Excel", "Imagen"]
@@ -54,93 +50,89 @@ def export_data_menu():
             file_json.export_graph_to_excel(Elements.get_elements(), "exported/" + nombreArchivo + ".xlsx")
             st.write(f"Grafo exportado exitosamente: {nombreArchivo}.xlsx")
 
-
 def edit_nodo_menu():
     options = ["Agregar", "Editar", "Eliminar"]
     selected_option = st.sidebar.selectbox("Seleccionar tipo de edición de nodo", options, index=0)
+
     if selected_option == "Agregar":
         add_node()
     elif selected_option == "Editar":
-        edit_options = ["Cambiar color", "Cambiar nombre", "Cambiar valor"]
-        selected_edit_option = st.sidebar.selectbox("Selecciona lo que deseas editar del nodo", edit_options, index=0)
-        if selected_edit_option == "Cambiar color":
-            color = st.color_picker('Elige un color', '#00f900')
-            # Muestra el color seleccionado
-            st.write('El color actual es', color)
-            opciones = []
-
-            for element in Elements.get_elements():
-                if 'data' in element and 'label' in element['data']:
-                    opciones.append(element['data']['label'])
-
-            index = -1
-            label = st.selectbox(f"Seleccione el nodo que desea colorear", opciones, index)
-
-            if label is not None and st.button("Confirmar"):
-                node_index = Elements.find_index_node_by_label(label, Elements.get_elements())
-                if node_index is not -1:
-                    st.success("Se ha coloreado el nodo satisfactoriamente")
-                    Elements.get_elements()[node_index]['style']['background'] = color
-
-        if selected_edit_option == "Cambiar nombre":
-            color = st.text_input('Escribe el nuevo nombre')
-            opciones = []
-
-            for element in Elements.get_elements():
-                if 'data' in element and 'label' in element['data']:
-                    opciones.append(element['data']['label'])
-
-            index = -1
-            label = st.selectbox(f"Seleccione el nodo que desea renombrar", opciones, index)
-
-            if label is not None and st.button("Confirmar"):
-                node_index = Elements.find_index_node_by_label(label, Elements.get_elements())
-                if node_index is not -1:
-                    st.success("Se ha renombrado el nodo satisfactoriamente")
-                    Elements.get_elements()[node_index]['data']['label'] = color
-
-        if selected_edit_option == "Cambiar valor":
-            color = st.number_input('Escribe el nuevo valor')
-            opciones = []
-
-            for element in Elements.get_elements():
-                if 'data' in element and 'label' in element['data']:
-                    opciones.append(element['data']['label'])
-
-            index = -1
-            label = st.selectbox(f"Seleccione el nodo que desea revaluar", opciones, index)
-
-            if label is not None and st.button("Confirmar"):
-                node_index = Elements.find_index_node_by_label(label, Elements.get_elements())
-                if node_index is not -1:
-                    st.success("Se ha revaluado el nodo satisfactoriamente")
-                    Elements.get_elements()[node_index]['data']['value'] = color
-
+        handle_edit_node()
     elif selected_option == "Eliminar":
-        # Obtener los nombres de los nodos que tienen la clave 'label'
-        opciones = []
+        handle_remove_node()
+    display_flow()
 
-        for element in Elements.get_elements():
-            if 'data' in element and 'label' in element['data']:
-                opciones.append(element['data']['label'])
+def handle_edit_node():
+    edit_options = ["Cambiar color", "Cambiar nombre", "Cambiar valor"]
+    selected_edit_option = st.sidebar.selectbox("Selecciona lo que deseas editar del nodo", edit_options, index=0)
 
-        if opciones:
-            # Seleccionar nodo a eliminar
-            label_container = st.empty()
-            index = -1
-            label = st.selectbox(f"Seleccione la opción que desea", opciones, index)
+    if selected_edit_option == "Cambiar color":
+        edit_node_color()
+    elif selected_edit_option == "Cambiar nombre":
+        edit_node_label()
+    elif selected_edit_option == "Cambiar valor":
+        edit_node_value()
 
-            if label is not None and st.button("Confirmar"):
-                node_id = Elements.find_index_node_by_label(label, Elements.get_elements())
-                if node_id is not -1:
-                    st.success("Se ha eliminado el nodo satisfactoriamente")
-                    print(node_id, "indice a eliminar")
-                    Elements.get_elements().pop(node_id)
-                    # Actualizar la lista de opciones y reinicializar el selectbox
-                opciones = [element.get("label", "") for element in Elements.get_elements() if 'data' in element and 'label' in element['data']]
-                label_container.empty()
-        else:
-            st.warning("No hay nodos disponibles para eliminar.")
+def edit_node_color():
+    color = st.color_picker('Elige un color', '#00f900')
+    st.write('El color actual es', color)
+    nodes = [element['data']['label'] for element in Elements.get_elements()
+             if 'data' in element and 'label' in element['data']]
+
+    label = st.selectbox(f"Seleccione el nodo que desea colorear", nodes, index=0)
+
+    if label is not None and st.button("Confirmar"):
+        node_index = Elements.find_index_node_by_label(label, Elements.get_elements())
+        if node_index != -1:
+            st.success("Se ha coloreado el nodo satisfactoriamente")
+            Elements.get_elements()[node_index]['style']['background'] = color
+
+
+def edit_node_label():
+    new_label = st.text_input('Escribe el nuevo nombre')
+    nodes = [element['data']['label'] for element in Elements.get_elements()
+             if 'data' in element and 'label' in element['data']]
+
+    label = st.selectbox(f"Seleccione el nodo que desea renombrar", nodes, index=0)
+
+    if label is not None and st.button("Confirmar"):
+        node_index = Elements.find_index_node_by_label(label, Elements.get_elements())
+        if node_index != -1:
+            st.success("Se ha renombrado el nodo satisfactoriamente")
+            Elements.get_elements()[node_index]['data']['label'] = new_label
+
+
+def edit_node_value():
+    new_value = st.number_input('Escribe el nuevo valor')
+    nodes = [element['data']['label'] for element in Elements.get_elements()
+             if 'data' in element and 'label' in element['data']]
+
+    label = st.selectbox(f"Seleccione el nodo que desea revaluar", nodes, index=0)
+
+    if label is not None and st.button("Confirmar"):
+        node_index = Elements.find_index_node_by_label(label, Elements.get_elements())
+        if node_index != -1:
+            st.success("Se ha revaluado el nodo satisfactoriamente")
+            Elements.get_elements()[node_index]['data']['value'] = new_value
+
+
+def handle_remove_node():
+    nodes = [element['data']['label'] for element in Elements.get_elements()
+             if 'data' in element and 'label' in element['data']]
+
+    if nodes:
+        label = st.selectbox(f"Seleccione el nodo que desea eliminar", nodes, index=0)
+
+        if label is not None and st.button("Confirmar"):
+            node_id = Elements.find_index_node_by_label(label, Elements.get_elements())
+            if node_id != -1:
+                st.success("Se ha eliminado el nodo satisfactoriamente")
+                Elements.get_elements().pop(node_id)
+    else:
+        st.warning("No hay nodos disponibles para eliminar.")
+
+
+def display_flow():
     Elements.set_elements(json_elements.create_elements_from_list(Elements.get_elements()))
     flow_styles = {"height": 500, "width": 800}
     react_flow("graph", elements=Elements.get_elements(), flow_styles=flow_styles)
@@ -174,14 +166,12 @@ def edit_arco_menu():
         elif selected_option == "Eliminar":
             # Eliminar la conexión entre los nodos
             eliminar_conexion()
-
-    actualizar_elementos_y_mostrar_flujo()
+    display_flow()
 
 
 def obtener_nodos_conectados(elementos):
     nodos_conectados_origen = {int(element.get('source')) for element in elementos if 'source' in element}
     nodos_conectados_destino = {int(element.get('target')) for element in elementos if 'target' in element}
-    print(nodos_conectados_origen, nodos_conectados_destino, "obtener_nodos_conectados")
     return nodos_conectados_origen, nodos_conectados_destino
 
 
@@ -197,13 +187,7 @@ def encontrar_id_nodo(label, elementos):
 
 
 def eliminar_conexion():
-
-    #Elements.set_elements(json_elements.transform_graph(Elements.get_elements()))
-    #Elements.set_elements(json_elements.convert_to_react_flow(Elements.get_elements()))
-    #Elements.set_elements(json_elements.create_elements_from_list(Elements.get_elements()))
-    
     elementos = Elements.get_elements()
-    print(elementos, "elementos q se pueden eliminar")
     nodos_conectados_origen, nodos_conectados_destino = obtener_nodos_conectados(elementos)
 
     opciones_origen = filtrar_opciones(nodos_conectados_origen, elementos)
@@ -238,13 +222,6 @@ def eliminar_conexion():
                     st.warning("No se encontraron los nodos de origen y destino especificados")
     else:
         st.subheader("No hay aristas a eliminar")
-
-
-def actualizar_elementos_y_mostrar_flujo():
-    Elements.set_elements(json_elements.create_elements_from_list(Elements.get_elements()))
-    flow_styles = {"height": 500, "width": 800}
-    react_flow("graph", elements=Elements.get_elements(), flow_styles=flow_styles)
-
 
 def processes_menu():
     options = ["Proceso 1", "Proceso 2", "Proceso 3"]
