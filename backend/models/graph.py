@@ -88,6 +88,10 @@ class Elements:
         new_node = {
             "id": str(node_id),
             "type": "default",
+            "style": {"background": '#fff', "width": 75, "height": 75, "align-items": "center",
+                      "box-shadow": "-2px 10px 100px 3px rgba(255,255,255,0.25)",
+                      "text-shadow": "4px 4px 2px rgba(0,0,0,0.3)",
+                      "font-size": "30px", "border-radius": "50%"},
             "data": {"label": node_label},
             "position": {"x": 0, "y": 0}
         }

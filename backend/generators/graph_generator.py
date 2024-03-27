@@ -13,7 +13,11 @@ def random_graph(num_nodes, directed=False, weighted=False, connected=False, com
         node_label = ''.join(random.choices(string.ascii_uppercase, k=3))  # Etiqueta aleatoria de 3 letras
         nodes.append({
             "id": node_id,
-            "type": 'input',
+            "type": 'default',
+            "style": {"background": '#fff', "width": 75, "height": 75, "align-items": "center",
+                      "box-shadow": "-2px 10px 100px 3px rgba(255,255,255,0.25)",
+                      "text-shadow": "4px 4px 2px rgba(0,0,0,0.3)",
+                      "font-size": "30px", "border-radius": "50%"},
             "data": {"label": node_label},
             "position": {"x":random.randint(100,400), "y":random.randint(100,200)},
             "linkedTo": []
