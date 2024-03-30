@@ -99,25 +99,6 @@ def convert_to_react_flow(elements):
                             node["linkedTo"].append(react_edge)
 
     return react_elements
-
-def transform_graph(elements):
-    transformed_elements = []
-    for element in elements:
-        if isinstance(element, dict) and "data" in element and isinstance(element["data"], dict) and "label" in element["data"]:
-            transformed_elements.append({
-                'id': element['id'],
-                'type': element['type'],
-                "style": {"background": '#fff', "width": 75, "height": 75, "align-items": "center",
-                          "box-shadow": "-2px 10px 100px 3px rgba(255,255,255,0.25)",
-                          "text-shadow": "4px 4px 2px rgba(0,0,0,0.3)",
-                          "font-size": "30px", "border-radius": "50%"},
-                'data': {'label': element['data']['label'], 'value':0},
-                'position': {'x': 0, 'y': 0},
-                'linkedTo': [] if 'linkedTo' not in element else element['linkedTo']
-            })
-    return transformed_elements
-
-
 def create_elements_from_list(data_list):
     elements = []
 
@@ -136,7 +117,7 @@ def extract_node_data(node_data):
     node_label = node_data.get("label", node_id)
     node_type = node_data.get("type", "default")
     node_position = node_data.get("coordenates", {"x": 0, "y": 0})
-    linked_to = [{"nodeId": link["nodeId"], "weight": link.get("weight", 0)} for link in node_data.get("linkedTo", [])]
+    linked_to = [{"nodeId": link["nodeId"], "weight": link.get("weight", 0)} for link in node_data["linkedTo"]]
     return {
         "id": node_id,
         "type": "default",

@@ -57,7 +57,6 @@ def file_menu():
             st.markdown("<meta http-equiv='refresh' content='0;URL=about:blank' />", unsafe_allow_html=True)
         else:
             st.write(f"Seleccionaste la opción de archivo: {selected_option}")
-    selected_option = None
 
     return Elements
 

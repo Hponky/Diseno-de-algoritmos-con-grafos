@@ -74,17 +74,6 @@ class Elements:
 
     @staticmethod
     def add_node(graph, node_id, node_label):
-        # Función para añadir un nodo al grafo
-        # Código de la función ...
-
-        """
-                Añade un nodo al grafo.
-
-                Args:
-                - graph: Lista que representa el grafo.
-                - node_id: Identificador único del nodo a añadir.
-                - node_data: Información asociada al nodo a añadir.
-                """
         new_node = {
             "id": str(node_id),
             "type": "default",

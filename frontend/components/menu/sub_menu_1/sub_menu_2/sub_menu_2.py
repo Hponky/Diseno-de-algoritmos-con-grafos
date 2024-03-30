@@ -20,8 +20,9 @@ def new_grafo_menu():
                 if selected_option_1 == "Agregar Nodo":
                     add_node()
                 elif selected_option_1 == "Agregar Arista":
-                    graph_generator.manual_conection(Elements.get_elements())
-            Elements.set_elements(json_elements.transform_graph(Elements.get_elements()))
+                    tipo_arista = st.selectbox("Tipo de arista", ["Dirigida", "No dirigida"])
+                    st.write(f"Tipo de arista seleccionada: {tipo_arista}")
+                    graph_generator.manual_conection(Elements.get_elements(), tipo_arista)
         if selected_option == "Aleatorio":
             if not Elements.get_created():
                 Elements.set_elements([])
@@ -160,11 +161,9 @@ def edit_arco_menu():
     if selected_option is not None:
         st.write(f"Seleccionaste la opción de edición de arista: {selected_option}")
         st.write(f"Tipo de arista seleccionada: {tipo_arista}")
-
         if selected_option == "Agregar":
             graph_generator.manual_conection(Elements.get_elements(), tipo_arista)
         elif selected_option == "Eliminar":
-            # Eliminar la conexión entre los nodos
             eliminar_conexion()
     display_flow()
 
@@ -178,18 +177,17 @@ def obtener_nodos_conectados(elementos):
 def filtrar_opciones(nodos_conectados, elementos):
     return [element['data']['label'] for element in elementos
             if 'data' in element and 'label' in element['data']
-            and element['id'] in nodos_conectados]
+            and int(element['id']) in nodos_conectados]
 
 
 def encontrar_id_nodo(label, elementos):
-    return next(((element['id']) for element in elementos if
+    return next((int(element['id']) for element in elementos if
                  'data' in element and 'label' in element['data'] and element['data']['label'] == label), None)
 
 
 def eliminar_conexion():
     elementos = Elements.get_elements()
     nodos_conectados_origen, nodos_conectados_destino = obtener_nodos_conectados(elementos)
-
     opciones_origen = filtrar_opciones(nodos_conectados_origen, elementos)
     opciones_destino = filtrar_opciones(nodos_conectados_destino, elementos)
 
@@ -201,17 +199,17 @@ def eliminar_conexion():
             if origen is not None and destino is not None:
                 source_id = encontrar_id_nodo(origen, elementos)
                 target_id = encontrar_id_nodo(destino, elementos)
-
                 if source_id is not None and target_id is not None:
                     updated_elements = [element for element in elementos
                                         if not ('source' in element and 'target' in element
-                                                and element['source'] == source_id
-                                                and int(element['target']) == target_id)]
-
+                                                and int(element.get('source', 0)) == source_id
+                                                and int(element.get('target', 0)) == target_id)]
                     for element in updated_elements:
-                        if element.get('id') == source_id:
-                            element['linkedTo'] = [link for link in element.get('linkedTo', []) if
-                                                   link.get('nodeId') != target_id]
+                        element_id = get_element_id(element)
+                        if not element_id.startswith('edge'):
+                            if int(element_id) == source_id:
+                                element['linkedTo'] = [link for link in element.get('linkedTo', []) if
+                                                       link.get('nodeId') != target_id]
 
                     if len(updated_elements) < len(elementos):
                         st.success(f"Conexión de '{origen}' a '{destino}' eliminada correctamente")
@@ -222,6 +220,11 @@ def eliminar_conexion():
                     st.warning("No se encontraron los nodos de origen y destino especificados")
     else:
         st.subheader("No hay aristas a eliminar")
+def get_element_id(element):
+    id_value = element.get('id')
+    if isinstance(id_value, int):  # Verificar si el ID es un entero
+        return str(id_value)
+    return id_value
 
 def processes_menu():
     options = ["Proceso 1", "Proceso 2", "Proceso 3"]
