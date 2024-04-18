@@ -31,3 +31,5 @@ U
 %documents/saved/grafo_guardado_3.json,4\9\49e9f1b49d063ccae92bbb93d3fcdc62253ac695
 U
 %documents/saved/grafo_guardado_4.json,1\7\17a4d2fd8506f892b221e3bdeb0abf361cb092b2
+T
+$backend/generators/graph_detector.py,2\8\280e9acd9949d3e9d06c66aef1bff8ae77d2d2a6

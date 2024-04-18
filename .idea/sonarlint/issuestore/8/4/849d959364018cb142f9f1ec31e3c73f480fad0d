@@ -1,7 +1,10 @@
 
-¢python:S117+"^Rename this local variable "nombreArchivo" to match the regular expression ^[_a-z][a-z0-9_]*$.(¿«¸¢8Ñòà¨å1J$b371290b-dbc7-40df-b029-59295f7da147
-™python:S3776	"TRefactor this function to reduce its Cognitive Complexity from 23 to the 15 allowed.(È³Çó8Òòà¨å1J$50a21b73-5efe-46b9-bdf6-9fbd8e14d55e
-zpython:S1172R"0Remove the unused function parameter "elements".(¬ë°Öùÿÿÿÿ8Óòà¨å1J$dcdbce9b-4e48-43a4-bc84-3806357b4232
-upython:S1172_"0Remove the unused function parameter "elements".(‰’8Óòà¨å1J$bac99ef1-139a-4750-9d14-e9868d51a94a
-zpython:S1172j"0Remove the unused function parameter "elements".(Ç’ø€şÿÿÿÿ8Óòà¨å1J$3e6c38aa-cf1c-40b7-9fa9-d73c23d0bd46
-upython:S1172u"0Remove the unused function parameter "elements".(·Å³—8Óòà¨å1J$1d00b71e-3a4b-4410-b5bd-b0b4ab3cacac
+‘python:S2208"GImport only needed names or import the module and then use its members.(·È¿Şÿÿÿÿÿ8¿Ú½™ï1J$f4667c90-ee88-4405-92f2-43d61d9d671c
+¢python:S1171"^Rename this local variable "nombreArchivo" to match the regular expression ^[_a-z][a-z0-9_]*$.(¿«¸¢8ÁÚ½™ï1J$7d4bd1fd-fcaf-47a9-9da3-8bc7a5d6b3a0
+™python:S3776
+"TRefactor this function to reduce its Cognitive Complexity from 26 to the 15 allowed.(È³Çó8ÄÚ½™ï1J$349e385f-1ae4-4b8d-a9ad-d31fec7f8c36
+python:S1481i"5Replace the unused local variable "colores" with "_".(…­Çİıÿÿÿÿ8ÅÚ½™ï1J$2ba0fa7f-a23c-4552-a0ad-625985219db7
+zpython:S1172p"0Remove the unused function parameter "elements".(¬ë°Öùÿÿÿÿ8ÆÚ½™ï1J$de5a82cc-ccc5-447b-8c95-db4342ce2efc
+vpython:S1172€"0Remove the unused function parameter "elements".(‰’8ÆÚ½™ï1J$d329dad7-b0b3-4f97-97f7-e7562576ea24
+{python:S1172"0Remove the unused function parameter "elements".(Ç’ø€şÿÿÿÿ8ÇÚ½™ï1J$e9acef3f-0b7b-49f0-ace9-c5d08146918e
+vpython:S1172™"0Remove the unused function parameter "elements".(·Å³—8ÇÚ½™ï1J$60b4f908-f05c-471a-9f7c-be65eaa0000b
