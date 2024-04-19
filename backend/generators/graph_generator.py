@@ -119,7 +119,7 @@ def manual_conection(elements, tipo_arista):
            # Verificar si la conexión ya existe
            if "linkedTo" in elemento_origen:
                for link in elemento_origen["linkedTo"]:
-                   if int(link["nodeId"]) == int(elemento_destino["id"]):
+                   if str(link["nodeId"]) == str(elemento_destino["id"]):
                        st.warning("La conexión ya existe.")
                        return
 

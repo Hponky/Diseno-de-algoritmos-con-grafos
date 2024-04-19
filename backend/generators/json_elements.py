@@ -107,7 +107,7 @@ def create_elements_from_list(data_list):
 
         linked_to = node_data.get("linkedTo", [])
         for link in linked_to:
-            edge = extract_edge_data(node_data["id"], link)
+            edge = extract_edge_data(str(node_data["id"]), link)
             elements.append(edge)
     return elements
 
@@ -117,7 +117,7 @@ def extract_node_data(node_data):
     node_label = node_data.get("label", node_id)
     node_type = node_data.get("type", "default")
     node_position = node_data.get("coordenates", {"x": 0, "y": 0})
-    linked_to = [{"nodeId": link["nodeId"], "weight": link.get("weight", 0)} for link in node_data["linkedTo"]]
+    linked_to = [{"nodeId": str(link["nodeId"]), "weight": link.get("weight", 0)} for link in node_data["linkedTo"]]
     return {
         "id": node_id,
         "type": "default",
@@ -149,7 +149,7 @@ def create_elements_from_json(uploaded_file):
             elements.append(node)
             linked_to = node_data.get("linkedTo")
             for link in linked_to:
-                edge = extract_edge_data(node["id"], link)
+                edge = extract_edge_data(str(node["id"]), link)
                 elements.append(edge)
 
     return elements if elements else nodes

@@ -169,19 +169,19 @@ def edit_arco_menu():
 
 
 def obtener_nodos_conectados(elementos):
-    nodos_conectados_origen = {int(element.get('source')) for element in elementos if 'source' in element}
-    nodos_conectados_destino = {int(element.get('target')) for element in elementos if 'target' in element}
+    nodos_conectados_origen = {str(element.get('source')) for element in elementos if 'source' in element}
+    nodos_conectados_destino = {str(element.get('target')) for element in elementos if 'target' in element}
     return nodos_conectados_origen, nodos_conectados_destino
 
 
 def filtrar_opciones(nodos_conectados, elementos):
     return [element['data']['label'] for element in elementos
             if 'data' in element and 'label' in element['data']
-            and int(element['id']) in nodos_conectados]
+            and str(element['id']) in nodos_conectados]
 
 
 def encontrar_id_nodo(label, elementos):
-    return next((int(element['id']) for element in elementos if
+    return next((str(element['id']) for element in elementos if
                  'data' in element and 'label' in element['data'] and element['data']['label'] == label), None)
 
 
@@ -202,12 +202,12 @@ def eliminar_conexion():
                 if source_id is not None and target_id is not None:
                     updated_elements = [element for element in elementos
                                         if not ('source' in element and 'target' in element
-                                                and int(element.get('source', 0)) == source_id
-                                                and int(element.get('target', 0)) == target_id)]
+                                                and str(element.get('source', 0)) == source_id
+                                                and str(element.get('target', 0)) == target_id)]
                     for element in updated_elements:
                         element_id = get_element_id(element)
                         if not element_id.startswith('edge'):
-                            if int(element_id) == source_id:
+                            if str(element_id) == source_id:
                                 element['linkedTo'] = [link for link in element.get('linkedTo', []) if
                                                        link.get('nodeId') != target_id]
 

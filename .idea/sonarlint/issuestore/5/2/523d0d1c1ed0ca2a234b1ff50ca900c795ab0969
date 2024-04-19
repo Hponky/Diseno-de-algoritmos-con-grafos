@@ -1,14 +1,19 @@
 
-tpython:S1066~"/Merge this if statement with the enclosing one.(ë¸ïè8ÆŞÓ¦å1J$0031fcc8-5fc8-4026-9249-cd07ba95736f
+upython:S1066ƒ"/Merge this if statement with the enclosing one.(ë¸ïè8ÆŞÓ¦å1J$0031fcc8-5fc8-4026-9249-cd07ba95736f
 kpython:S2208"GImport only needed names or import the module and then use its members.(…¶ò¿şÿÿÿÿ8ãá“¨å1
 kpython:S2208"GImport only needed names or import the module and then use its members.(Ì•ÿÿÿÿÿ8ãá“¨å1
-dpython:S5720"@Rename "elements" to "self" or add the missing "self" parameter.(¡ºÑ üÿÿÿÿ8äá“¨å1
-apython:S5720"=Rename "label" to "self" or add the missing "self" parameter.(ÿàíƒşÿÿÿÿ8åá“¨å1
-cpython:S5720"?Rename "counter" to "self" or add the missing "self" parameter.(Õ±Šòùÿÿÿÿ8åá“¨å1
-apython:S5720"BRename "graph_data" to "self" or add the missing "self" parameter.(¸ú™ë8åá“¨å1
-\python:S5720)"=Rename "lista" to "self" or add the missing "self" parameter.(£ıª8æá“¨å1
-Cpython:S5719"Add a "self" or class parameter(³Æ½¢øÿÿÿÿ8çá“¨å1
-dpython:S5719y"Add a "self" or class parameter(ƒ«Í8ÚŞÓ¦å1J$1833c8bf-04f5-49e0-87b7-28521cd9d540
-epython:S5719‡"Add a "self" or class parameter(ı·şç8ÛŞÓ¦å1J$82622bae-c428-4f9e-9e25-2d3542ea3862
-Qpython:S1172"2Remove the unused function parameter "graph_data".(¸ú™ë8ìá“¨å1
-Fpython:S5603!"(Remove this unused function declaration.(ì˜Ót8îá“¨å1
+dpython:S5720"@Rename "elements" to "self" or add the missing "self" parameter.(¡ºÑ üÿÿÿÿ8äá“¨å1
+Xpython:S5720"9Rename "c" to "self" or add the missing "self" parameter.(‘®êŠ8–€ÊÁï1
+apython:S5720"=Rename "label" to "self" or add the missing "self" parameter.(ÿàíƒşÿÿÿÿ8åá“¨å1
+cpython:S5720'"?Rename "counter" to "self" or add the missing "self" parameter.(Õ±Šòùÿÿÿÿ8åá“¨å1
+apython:S5720+"BRename "graph_data" to "self" or add the missing "self" parameter.(¸ú™ë8åá“¨å1
+\python:S57205"=Rename "lista" to "self" or add the missing "self" parameter.(£ıª8æá“¨å1
+bpython:S5720—"=Rename "color" to "self" or add the missing "self" parameter.(¼Îş×üÿÿÿÿ8€ÊÁï1
+Cpython:S5719"Add a "self" or class parameter(³Æ½¢øÿÿÿÿ8çá“¨å1
+>python:S5719"Add a "self" or class parameter(ì¿î¾8°€ÊÁï1
+dpython:S5719~"Add a "self" or class parameter(ƒ«Í8ÚŞÓ¦å1J$1833c8bf-04f5-49e0-87b7-28521cd9d540
+epython:S5719Š"Add a "self" or class parameter(ı·şç8ÛŞÓ¦å1J$82622bae-c428-4f9e-9e25-2d3542ea3862
+Qpython:S1172+"2Remove the unused function parameter "graph_data".(¸ú™ë8ìá“¨å1
+Fpython:S5603-"(Remove this unused function declaration.(ì˜Ót8îá“¨å1
+Npython:S1481˜")Remove the unused local variable "style".(ÿÿ²øüÿÿÿÿ8½€ÊÁï1
+jpython:S3457˜"EAdd replacement fields or use a normal string instead of an f-string.(ÿÿ²øüÿÿÿÿ8À€ÊÁï1
