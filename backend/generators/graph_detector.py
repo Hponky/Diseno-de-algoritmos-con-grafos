@@ -1,7 +1,6 @@
 import random
 import streamlit as st
-
-
+from streamlit_react_flow import react_flow
 from collections import deque
 from backend.models.graph import Elements
 
@@ -54,17 +53,9 @@ def detectar_bipartito(datos):
 
    return grafo
 
-
-
-
-import random
-
-
 def colorear_bipartito(grafo):
    # Inicializa un diccionario de colores para almacenar los colores de los nodos (0 o 1)
    color = {}
-
-
    # Inicializa una cola para el recorrido BFS
    cola = []
    # Comienza el recorrido BFS desde un nodo arbitrario
@@ -84,7 +75,6 @@ def colorear_bipartito(grafo):
    while cola:
        nodo_actual = cola.pop(0)
        color_actual = color[nodo_actual]
-
 
        # Agrega el nodo actual al grafo coloreado
        nodo_coloreado = {
@@ -115,7 +105,7 @@ def colorear_bipartito(grafo):
                cola.append(vecino)
            elif color[vecino] == color_actual:
                # Si el vecino tiene el mismo color que el nodo actual, el grafo no es bipartito
-               return False, None
+               return False, None, []
 
 
            # Agrega la conexión entre el nodo actual y el vecino al grafo coloreado
@@ -131,86 +121,63 @@ def colorear_bipartito(grafo):
            # Agrega el nodo vecino a la lista de nodos conectados del nodo actual
            nodo_coloreado["linkedTo"].append({"nodeId": str(vecino), "weight": 1})  # Puedes ajustar el peso según sea necesario
 
-
-   # Agregar nodos con conexiones vacías
-   for nodo, conexiones in grafo.items():
-       if nodo not in color:
-           colour = random.randint(0, 1)
-           nodo_coloreado = {
-               "id": str(nodo),
-               "type": "default",
-               "data": {"label": f"{str(nodo)}"},
-               "style": {
-                   "background": "blue" if colour == 0 else "red",
-                   "width": 75,
-                   "height": 75,
-                   "align-items": "center",
-                   "box-shadow": "-2px 10px 100px 3px rgba(255,255,255,0.25)",
-                   "text-shadow": "4px 4px 2px rgba(0,0,0,0.3)",
-                   "font-size": "30px",
-                   "border-radius": "50%"
-               },
-               "position": {"x": random.randint(100, 400), "y": random.randint(100, 200)},
-               "linkedTo": []  # Inicializa la lista de nodos conectados
-           }
-           grafo_coloreado.append(nodo_coloreado)
-
-
+       print(f"color: {color}, y grafo coloreado: {grafo_coloreado}")
    return True, color, grafo_coloreado
+
 def componentes_conexas_bipartito(grafo):
-   def es_bipartito_y_componente(subgrafo):
-       es_bipartito, colores, grafo = colorear_bipartito(subgrafo)
-       if not es_bipartito:
-           return False, set()
-       return True, set(colores.keys())
+    def es_bipartito_y_componente(subgrafo):
+        es_bipartito, colores, grafo = colorear_bipartito(subgrafo)
+        if not es_bipartito:
+            return False, set()
+        return True, set(colores.keys()), grafo
 
+    print(grafo, "esto es grafo bipártito")
+    graph = []
+    visitados_global = set()
+    componentes = []
+    es_bipartito_global = True
 
-   visitados_global = set()
-   componentes = []
-   es_bipartito_global = True
+    for nodo in grafo:
+        if nodo not in visitados_global:
+            subgrafo = {n: grafo[n] for n in grafo if n not in visitados_global}
+            es_bipartito, componente, graph2 = es_bipartito_y_componente(subgrafo)
+            for element in graph2:
+                if element not in graph:
+                    graph.append(element)
+            if not es_bipartito:
+                es_bipartito_global = False
+                break
+            componentes.append(componente)
+            visitados_global.update(componente)
 
+    if not es_bipartito_global:
+        st.error("El grafo no es bipartito.")
+        return
 
-   for nodo in grafo:
-       if nodo not in visitados_global:
-           subgrafo = {n: grafo[n] for n in grafo if n not in visitados_global}
-           es_bipartito, componente = es_bipartito_y_componente(subgrafo)
-           if not es_bipartito:
-               es_bipartito_global = False
-               break
-           componentes.append(componente)
-           visitados_global.update(componente)
+    # Fusionar componentes que están conectadas entre sí
+    for i in range(len(componentes)):
+        for j in range(i + 1, len(componentes)):
+            if not componentes[i].isdisjoint(componentes[j]):
+                componentes[i].update(componentes[j])
+    update = True
+    for nodo, conexiones in grafo.items():
+        if not conexiones:
+            for nodo2, conexiones in grafo.items():
+                if nodo in conexiones:
+                    update = False
+            if update:
+                componentes.append({nodo})
 
+    # Eliminar componentes vacías y devolver las componentes conexas
+    componentes_conexas = [c for c in componentes if c]
+    print("componentes conexas: ", componentes_conexas)
+    num_componentes_conexas = len(componentes_conexas)
 
-   if not es_bipartito_global:
-       st.error("El grafo no es bipartito.")
-       return
-
-
-   # Fusionar componentes que están conectadas entre sí
-   for i in range(len(componentes)):
-       for j in range(i + 1, len(componentes)):
-           if not componentes[i].isdisjoint(componentes[j]):
-               componentes[i].update(componentes[j])
-
-
-   update = True
-
-
-   for nodo, conexiones in grafo.items():
-       if not conexiones:
-           for nodo2, conexiones in grafo.items():
-               if nodo in conexiones:
-                   update = False
-   if update:
-       componentes.append({nodo})
-
-
-   # Eliminar componentes vacías y devolver las componentes conexas
-   componentes_conexas = [c for c in componentes if c]
-   num_componentes_conexas = len(componentes_conexas)
-   if num_componentes_conexas == 0:
-       st.error("El grafo no es bipartito o no se ha cargado el archivo.")
-   else:
-       st.success(
-           f"El grafo es bipartito y tiene {num_componentes_conexas} {'componente' if num_componentes_conexas == 1 else 'componentes'} conexas: {componentes_conexas}")
-   return
+    if num_componentes_conexas == 0:
+        st.error("El grafo no es bipartito o no se ha cargado el archivo.")
+    else:
+        st.success(
+            f"El grafo es bipartito y tiene {num_componentes_conexas} {'componente' if num_componentes_conexas == 1 else 'componentes'} conexas: {componentes_conexas}")
+        flow_styles = {"height": 500, "width": 800}
+        react_flow("graph", elements=graph, flow_styles=flow_styles)
+        return

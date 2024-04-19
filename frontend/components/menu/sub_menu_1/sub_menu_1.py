@@ -102,11 +102,7 @@ def graph_detector_menu():
    elements = Elements.get_elements()
    conexiones = detectar_bipartito(elements)
    if selected_option == "Determinar componentes si el grafo es bipartito":
-       con, colores, graph = colorear_bipartito(conexiones)
-       if con:
            componentes_conexas_bipartito(conexiones)
-           flow_styles = {"height": 500, "width": 800}
-           react_flow("graph", elements=graph, flow_styles=flow_styles)
 
 
 def execute_menu(elements):
