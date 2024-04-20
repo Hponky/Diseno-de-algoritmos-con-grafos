@@ -4,60 +4,43 @@ from streamlit_react_flow import react_flow
 from collections import deque
 from backend.models.graph import Elements
 from itertools import combinations as comb
+import itertools
 
-def procesar_entrada(datos):
-   grafo = []
-   for elemento in datos:
-       nodo = {}
-       if 'id' in elemento and 'data' in elemento and 'label' in elemento['data']:
-           nodo['id'] = str(elemento['id'])
-           nodo['type'] = 'default'
-           nodo['style'] = {
-               'background': '#fff',
-               'width': 75,
-               'height': 75,
-               'align-items': 'center',
-               'box-shadow': '-2px 10px 100px 3px rgba(255,255,255,0.25)',
-               'text-shadow': '4px 4px 2px rgba(0,0,0,0.3)',
-               'font-size': '30px',
-               'border-radius': '50%'
-           }
-           nodo['data'] = {'label': elemento['data']['label']}
-           nodo['position'] = {'x': elemento['position']['x'], 'y': elemento['position']['y']}
-           nodo['linkedTo'] = [{'nodeId': enlace['nodeId'], 'weight': enlace['weight']} for enlace in elemento.get('linkedTo', [])]
-           grafo.append(nodo)
-   return grafo
+def obtener_grafo(datos):
+    grafo = {}
+    for elemento in datos:
+        if 'data' in elemento and 'label' in elemento['data']:
+            nodo = elemento['data']['label']
+            grafo[nodo] = []
+            if 'linkedTo' in elemento:
+                for adyacente in elemento['linkedTo']:
+                    if 'nodeId' in adyacente:
+                        for otro_elemento in datos:
+                            if 'id' in otro_elemento and str(otro_elemento['id']) == str(adyacente['nodeId']):
+                                if 'data' in otro_elemento and 'label' in otro_elemento['data']:
+                                    nodo_adyacente = otro_elemento['data']['label']
+                                    grafo[nodo].append(nodo_adyacente)
+                                    break
+    return grafo
 
+def imprimir_subgrafos(subgrafos, resultados):
+    for idx, (subgrafo1, subgrafo2) in enumerate(subgrafos, start=1):
+        print(f"Combinación {idx}:")
+        print("Subgrafo 1:")
+        for nodo, conexiones in subgrafo1.items():
+            print(f"{nodo}: {conexiones}")
+        print("Subgrafo 2:")
+        for nodo, conexiones in subgrafo2.items():
+            print(f"{nodo}: {conexiones}")
+        print("Resultado:", resultados[idx - 1])
+        print()
 
 def detectar_bipartito(datos):
-   st.subheader("Determinar si el grafo es bipartito")
-   grafo = {}
-   for elemento in datos:
-       if 'data' in elemento and 'label' in elemento['data']:
-           nodo = elemento['data']['label']
-           grafo[nodo] = []
-           if 'linkedTo' in elemento:
-               for adyacente in elemento['linkedTo']:
-                   if 'nodeId' in adyacente:
-                       for otro_elemento in datos:
-                           if 'id' in otro_elemento and str(otro_elemento['id']) == str(adyacente['nodeId']):
-                               if 'data' in otro_elemento and 'label' in otro_elemento['data']:
-                                   nodo_adyacente = otro_elemento['data']['label']
-                                   grafo[nodo].append(nodo_adyacente)
-                                   break
-   print(procesar_datos(datos), "lo que devuelve la nueva funcion")
-   grafo_ejemplo = procesar_datos(datos)
-   subgrafos = g_subgrafos(grafo_ejemplo)
-
-   # Imprimir subgrafos
-   for idx, (subgrafo1, subgrafo2) in enumerate(subgrafos, start=1):
-       print(f"Subgrafo {idx}:")
-       print(subgrafo1)
-       print(subgrafo2)
-       print()
-
-   return grafo
-
+    print(procesar_datos(datos), "lo que devuelve la nueva funcion")
+    grafo_ejemplo = procesar_datos(datos)
+    subgrafos, resultados = generar_subgrafos(grafo_ejemplo)
+    imprimir_subgrafos(subgrafos, resultados)
+    return obtener_grafo(datos)
 
 def procesar_datos(datos):
     grafo = {}
@@ -78,7 +61,7 @@ def procesar_datos(datos):
                                     break
     return grafo
 
-def g_subgrafos(grafo):
+def generar_subgrafos(grafo):
     nodos = grafo.keys()
 
     # Generar todas las combinaciones posibles de nodos en dos conjuntos
@@ -105,7 +88,62 @@ def g_subgrafos(grafo):
         subgrafo2_format = {nodo: grafo[nodo] for nodo in subgrafo2}
         subgrafos_formateados.append((subgrafo1_format, subgrafo2_format))
 
-    return subgrafos_formateados
+    # Calcular el resultado para cada combinación
+    resultados_combinaciones = []
+    for subgrafo1, subgrafo2 in subgrafos_formateados:
+        resultado_combinacion = calcular_resultado_combinacion(subgrafo1, subgrafo2, grafo)
+        resultados_combinaciones.append(resultado_combinacion)
+
+    # Devolver las combinaciones de subgrafos y sus resultados correspondientes
+    return subgrafos_formateados, resultados_combinaciones
+
+
+def calcular_resultado_combinacion(subgrafo1, subgrafo2, grafo_original):
+    # Hacer una copia profunda del grafo original para evitar modificar el original
+    grafo_modificado = {nodo: conexiones.copy() for nodo, conexiones in grafo_original.items()}
+
+    # Inicializar el resultado
+    resultado = 0
+
+    # Diccionario para almacenar los pesos de las conexiones eliminadas por nodo destino
+    pesos_eliminados_por_nodo = {}
+
+    # Recorrer las conexiones del subgrafo1
+    for nodo, conexiones in subgrafo1.items():
+        for nodo_destino, peso in conexiones.items():
+            # Verificar si el nodo destino está en el subgrafo2
+            if nodo_destino in subgrafo2:
+                # Si es la primera conexión hacia este nodo, guardar su peso
+                if nodo_destino not in pesos_eliminados_por_nodo:
+                    pesos_eliminados_por_nodo[nodo_destino] = [peso]
+                else:
+                    pesos_eliminados_por_nodo[nodo_destino].append(peso)
+                # Eliminar la conexión del grafo modificado
+                del grafo_modificado[nodo][nodo_destino]
+
+    # Recorrer las conexiones del subgrafo2
+    for nodo, conexiones in subgrafo2.items():
+        for nodo_destino, peso in conexiones.items():
+            # Verificar si el nodo destino está en el subgrafo1
+            if nodo_destino in subgrafo1:
+                # Si es la primera conexión hacia este nodo, guardar su peso
+                if nodo_destino not in pesos_eliminados_por_nodo:
+                    pesos_eliminados_por_nodo[nodo_destino] = [peso]
+                else:
+                    pesos_eliminados_por_nodo[nodo_destino].append(peso)
+                # Eliminar la conexión del grafo modificado
+                del grafo_modificado[nodo][nodo_destino]
+
+    # Calcular el resultado para cada nodo destino
+    for nodo_destino, pesos in pesos_eliminados_por_nodo.items():
+        # Obtener el peso máximo y la suma de todos los pesos
+        peso_maximo = max(pesos)
+        suma_pesos = sum(pesos)
+        # Calcular el resultado como un valor aleatorio entre el peso máximo y la suma de todos los pesos
+        resultado += random.uniform(peso_maximo, suma_pesos)
+
+    return resultado
+
 
 def colorear_bipartito(grafo):
     # Inicializa un diccionario de colores para almacenar los colores de los nodos (0 o 1)
