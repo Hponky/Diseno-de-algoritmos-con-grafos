@@ -40,6 +40,13 @@ def detectar_bipartito(datos):
     grafo_ejemplo = procesar_datos(datos)
     subgrafos, resultados = generar_subgrafos(grafo_ejemplo)
     imprimir_subgrafos(subgrafos, resultados)
+
+    # Llamar a la función para encontrar la combinación con la menor pérdida de peso
+    combinacion_minima, resultado_minimo = encontrar_combinacion_minima(subgrafos, resultados)
+    print("Combinación con la menor pérdida de peso:")
+    print(combinacion_minima)
+    print("Resultado mínimo:", resultado_minimo)
+
     return obtener_grafo(datos)
 
 def procesar_datos(datos):
@@ -144,6 +151,21 @@ def calcular_resultado_combinacion(subgrafo1, subgrafo2, grafo_original):
 
     return resultado
 
+def encontrar_combinacion_minima(subgrafos, resultados):
+    # Inicializamos las variables para almacenar la combinación mínima y su resultado
+    combinacion_minima = None
+    resultado_minimo = float('inf')  # Inicializamos con un valor infinito
+
+    # Iteramos sobre cada combinación y su resultado
+    for idx, (subgrafo1, subgrafo2) in enumerate(subgrafos, start=1):
+        resultado = resultados[idx - 1]
+        # Si el resultado actual es menor que el mínimo registrado, actualizamos la combinación mínima
+        if resultado < resultado_minimo:
+            resultado_minimo = resultado
+            combinacion_minima = (subgrafo1, subgrafo2)
+
+    # Retornamos la combinación mínima y su resultado
+    return combinacion_minima, resultado_minimo
 
 def colorear_bipartito(grafo):
     # Inicializa un diccionario de colores para almacenar los colores de los nodos (0 o 1)
