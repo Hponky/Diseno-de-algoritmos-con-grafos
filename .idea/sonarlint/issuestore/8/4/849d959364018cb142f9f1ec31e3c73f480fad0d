@@ -1,9 +1,0 @@
-
-‘python:S2208"GImport only needed names or import the module and then use its members.(·È¿Şÿÿÿÿÿ8¿Ú½™ï1J$f4667c90-ee88-4405-92f2-43d61d9d671c
-¢python:S1171"^Rename this local variable "nombreArchivo" to match the regular expression ^[_a-z][a-z0-9_]*$.(¿«¸¢8ÁÚ½™ï1J$7d4bd1fd-fcaf-47a9-9da3-8bc7a5d6b3a0
-™python:S3776
-"TRefactor this function to reduce its Cognitive Complexity from 26 to the 15 allowed.(È³Çó8ÄÚ½™ï1J$349e385f-1ae4-4b8d-a9ad-d31fec7f8c36
-zpython:S1172l"0Remove the unused function parameter "elements".(¬ë°Öùÿÿÿÿ8ÆÚ½™ï1J$de5a82cc-ccc5-447b-8c95-db4342ce2efc
-upython:S1172|"0Remove the unused function parameter "elements".(‰’8ÆÚ½™ï1J$d329dad7-b0b3-4f97-97f7-e7562576ea24
-{python:S1172Š"0Remove the unused function parameter "elements".(Ç’ø€şÿÿÿÿ8ÇÚ½™ï1J$e9acef3f-0b7b-49f0-ace9-c5d08146918e
-vpython:S1172•"0Remove the unused function parameter "elements".(·Å³—8ÇÚ½™ï1J$60b4f908-f05c-471a-9f7c-be65eaa0000b

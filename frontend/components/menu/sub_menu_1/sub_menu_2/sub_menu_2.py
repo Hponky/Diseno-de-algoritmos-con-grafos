@@ -220,6 +220,7 @@ def eliminar_conexion():
                     st.warning("No se encontraron los nodos de origen y destino especificados")
     else:
         st.subheader("No hay aristas a eliminar")
+    print(Elements.get_elements(), "asi queda con conexión eliminada")
 def get_element_id(element):
     id_value = element.get('id')
     if isinstance(id_value, int):  # Verificar si el ID es un entero
