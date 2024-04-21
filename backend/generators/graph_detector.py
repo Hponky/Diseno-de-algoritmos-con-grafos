@@ -24,7 +24,11 @@ def detectar_bipartito(datos):
                                    break
    return grafo
 
-def colorear_nodo(nodo_actual, color_actual):
+def colorear_nodo(nodo_actual, color_actual, sumador0, sumador1):
+    if color_actual == 0:
+        sumador0 += 120
+    else:
+        sumador1 += 120
     nodo_coloreado = {
         "id": str(nodo_actual),
         "type": "default",
@@ -39,11 +43,11 @@ def colorear_nodo(nodo_actual, color_actual):
             "font-size": "30px",
             "border-radius": "50%"
         },
-        "position": {"x": random.randint(100, 400), "y": random.randint(100, 200)},
+        "position": {"x": 200 if color_actual == 0 else 400, "y": sumador0 if color_actual == 0 else sumador1},
         # Define las coordenadas según sea necesario
         "linkedTo": []  # Inicializa la lista de nodos conectados
     }
-    return nodo_coloreado
+    return nodo_coloreado, sumador0, sumador1
 
 def arista_coloreado(nodo_actual, vecino):
     enlace = {
@@ -164,8 +168,10 @@ def componentes_conexas_bipartito(grafo):
     # Continuar si el grafo es bipartito
     else:
         # Colorear los nodos del color determinado
+        sumador_color0 = 0
+        sumador_color1 = 0
         for nodo, color in colores.items():
-            nodo_coloreado = colorear_nodo(nodo,color)
+            nodo_coloreado, sumador_color0, sumador_color1 = colorear_nodo(nodo,color,sumador_color0, sumador_color1)
             for nodo2, conexiones in grafo.items():
                 if nodo == nodo2:
                     for con in conexiones:

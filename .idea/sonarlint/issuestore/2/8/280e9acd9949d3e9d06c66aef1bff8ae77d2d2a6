@@ -1,7 +1,7 @@
 
-python:S3776"TRefactor this function to reduce its Cognitive Complexity from 39 to the 15 allowed.(¢óÎüÿÿÿÿ8ÏÂšŠğ1J$a1f09344-6779-4190-9553-c05465011532
-™python:S3776="TRefactor this function to reduce its Cognitive Complexity from 26 to the 15 allowed.(‹‚Ù²8ÒÂšŠğ1J$266df09b-8743-484f-bc55-bf564d622429
-python:S3776Y"TRefactor this function to reduce its Cognitive Complexity from 93 to the 15 allowed.(ùÃÒ¤úÿÿÿÿ8ÓÂšŠğ1J$b8b3768b-6a56-4a3c-8ed5-4335b3b99ae8
-cpython:S3626£"Remove this redundant return.(ÙãŞŸ8ÔÂšŠğ1J$9aa4c9d0-f62b-4f52-a33d-900798fd28ec
-cpython:S3626¿"Remove this redundant return.(ÙãŞŸ8ÔÂšŠğ1J$589882a0-2173-4ea7-95a3-8bc6cc8179d4
-špython:S3776–"TRefactor this function to reduce its Cognitive Complexity from 27 to the 15 allowed.(Ö›¦ 8ÕÂšŠğ1J$61d18c9e-45e7-4bd6-a4ce-2a30dc167878
+python:S3776"TRefactor this function to reduce its Cognitive Complexity from 39 to the 15 allowed.(¢óÎüÿÿÿÿ8°®ÕŠğ1J$a3d0b81e-fedb-47cb-9994-83fd0f810261
+™python:S3776A"TRefactor this function to reduce its Cognitive Complexity from 26 to the 15 allowed.(‹‚Ù²8±®ÕŠğ1J$97a94d27-d855-445d-a694-e94d0e7de101
+python:S3776]"TRefactor this function to reduce its Cognitive Complexity from 93 to the 15 allowed.(ùÃÒ¤úÿÿÿÿ8²®ÕŠğ1J$f98b33b9-7395-4e53-b2d5-35e5f51114bc
+cpython:S3626§"Remove this redundant return.(ÙãŞŸ8³®ÕŠğ1J$86e288ce-5d04-40dc-84dd-8813d762d62e
+cpython:S3626Å"Remove this redundant return.(ÙãŞŸ8³®ÕŠğ1J$4fe9189c-07d8-40c8-a867-87120d8f325f
+špython:S3776š"TRefactor this function to reduce its Cognitive Complexity from 27 to the 15 allowed.(Ö›¦ 8³®ÕŠğ1J$ac656c9b-5f08-4fd3-8ff5-05033929d60e
