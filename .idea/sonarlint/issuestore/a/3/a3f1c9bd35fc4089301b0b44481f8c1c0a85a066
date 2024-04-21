@@ -1,5 +1,5 @@
 
-spython:S3776"TRefactor this function to reduce its Cognitive Complexity from 18 to the 15 allowed.(†Á‹ã8ıä˛¡Ô1
-<python:S125"Remove this commented out code.(íëºQ8˜ä˛¡Ô1
-xpython:S37762"TRefactor this function to reduce its Cognitive Complexity from 35 to the 15 allowed.(†Å∫ø¯ˇˇˇˇ8¯ä˛¡Ô1
-Lpython:S1481v"-Remove the unused local variable "node_type".(Ê‹¿í8˙ä˛¡Ô1
+ôpython:S3776"TRefactor this function to reduce its Cognitive Complexity from 18 to the 15 allowed.(†Á‹ã8ıä˛¡Ô1J$21de7a4c-079f-4a0d-a812-0ca33a1becbf
+bpython:S125"Remove this commented out code.(íëºQ8˜ä˛¡Ô1J$16dd1d51-de68-4c0b-bd33-1d7a3a0de6c6
+ûpython:S37762"TRefactor this function to reduce its Cognitive Complexity from 35 to the 15 allowed.(†Å∫ø¯ˇˇˇˇ8¯ä˛¡Ô1J$e2f0e8e3-888d-4bab-b04d-5e2236595263
+rpython:S1481v"-Remove the unused local variable "node_type".(Ê‹¿í8˙ä˛¡Ô1J$41c1f4ee-fde8-4161-bfb1-09d2d9f402df
