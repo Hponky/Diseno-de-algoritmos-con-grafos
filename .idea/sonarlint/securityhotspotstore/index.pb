@@ -5,8 +5,6 @@ H
 frontend/components/menu,4\3\43dc4bfce35042d6749559fe629cdbd6adc2d569
 P
  frontend/components/menu/menu.py,9\2\923c77ddaf6f6faf2fda23f4a8a53cc84f5e7d1d
-]
--frontend/components/menu/sub_menu/sub_menu.py,0\7\07ee9b1d806462be2530bffe7f02d0a2e05669f4
 G
 backend/models/graph.py,5\2\523d0d1c1ed0ca2a234b1ff50ca900c795ab0969
 S
@@ -21,15 +19,5 @@ w
 Gfrontend/components/menu/sub_menu_1/sub_menu_2/sub_menu_3/sub_menu_3.py,e\9\e966ba9fb48bca8dccbc93d7d87e1bd4cb8faed2
 a
 1frontend/components/menu/sub_menu_1/sub_menu_1.py,8\4\849d959364018cb142f9f1ec31e3c73f480fad0d
-K
-saved/grafo_guardado_1.json,3\9\39b9f565db35f91b11814c528452285067eb64e6
-K
-saved/grafo_guardado_2.json,4\6\46b0eb1d84c6c99fb29e37ad53ba999abcb07509
-U
-%documents/saved/grafo_guardado_2.json,a\c\acd631f177a1b883131b221d2f3d9fd0a9fa8bd2
-U
-%documents/saved/grafo_guardado_3.json,4\9\49e9f1b49d063ccae92bbb93d3fcdc62253ac695
-U
-%documents/saved/grafo_guardado_4.json,1\7\17a4d2fd8506f892b221e3bdeb0abf361cb092b2
 T
 $backend/generators/graph_detector.py,2\8\280e9acd9949d3e9d06c66aef1bff8ae77d2d2a6

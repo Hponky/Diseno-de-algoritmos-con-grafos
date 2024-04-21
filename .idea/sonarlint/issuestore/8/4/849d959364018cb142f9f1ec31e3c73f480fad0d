@@ -1,9 +1,9 @@
 
-‘python:S2208"GImport only needed names or import the module and then use its members.(·È¿Şÿÿÿÿÿ8Óãôæï1J$d77c324c-fdf9-4939-b562-674fcf430637
-¢python:S1171"^Rename this local variable "nombreArchivo" to match the regular expression ^[_a-z][a-z0-9_]*$.(¿«¸¢8òãôæï1J$49ae2b92-7820-46bb-b829-0ef921a1397d
+‘python:S2208"GImport only needed names or import the module and then use its members.(·È¿Şÿÿÿÿÿ8Óãôæï1J$a29835de-29f2-4cf5-966e-45ebab7210df
+¢python:S1171"^Rename this local variable "nombreArchivo" to match the regular expression ^[_a-z][a-z0-9_]*$.(¿«¸¢8òãôæï1J$12d15160-150f-41d5-9205-72fa6d7505a1
 ™python:S3776
-"TRefactor this function to reduce its Cognitive Complexity from 26 to the 15 allowed.(È³Çó8äôæï1J$0165de93-7948-49a5-b6f9-bc4292da541b
-zpython:S1172l"0Remove the unused function parameter "elements".(¬ë°Öùÿÿÿÿ8äôæï1J$1a495804-1672-4dba-bde3-1ffede9d6e2a
-upython:S1172|"0Remove the unused function parameter "elements".(‰’8äôæï1J$4d18de5c-26ef-4ac5-b361-63c3870e21ee
-{python:S1172Š"0Remove the unused function parameter "elements".(Ç’ø€şÿÿÿÿ8äôæï1J$c3e5bdaf-2158-4798-aad7-be71efd5017e
-vpython:S1172•"0Remove the unused function parameter "elements".(·Å³—8Ÿäôæï1J$10cb248f-2403-411b-9cef-9b2731866321
+"TRefactor this function to reduce its Cognitive Complexity from 26 to the 15 allowed.(È³Çó8äôæï1J$58687dc5-f2db-4427-a1ad-793a76608e89
+zpython:S1172l"0Remove the unused function parameter "elements".(¬ë°Öùÿÿÿÿ8äôæï1J$f4faa25d-81cb-43d0-bfa7-aa086df7f0c2
+upython:S1172|"0Remove the unused function parameter "elements".(‰’8äôæï1J$cad9a025-ac8e-49ca-beef-006e204a3ade
+{python:S1172Š"0Remove the unused function parameter "elements".(Ç’ø€şÿÿÿÿ8äôæï1J$e2cf594b-a6b8-40ff-aa5b-511950c24faf
+vpython:S1172•"0Remove the unused function parameter "elements".(·Å³—8Ÿäôæï1J$6a9bbffa-ca01-4840-84f2-9429260cc8b2

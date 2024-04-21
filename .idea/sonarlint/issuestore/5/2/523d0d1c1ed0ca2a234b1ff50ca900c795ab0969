@@ -1,19 +1,19 @@
 
-upython:S1066ƒ"/Merge this if statement with the enclosing one.(ë¸ïè8ÆŞÓ¦å1J$1a873b26-7d1b-4c59-b618-66189fc8172a
-‘python:S2208"GImport only needed names or import the module and then use its members.(…¶ò¿şÿÿÿÿ8ãá“¨å1J$693bfd2a-76f6-4d40-9e46-875eb1d592a2
-‘python:S2208"GImport only needed names or import the module and then use its members.(Ì•ÿÿÿÿÿ8ãá“¨å1J$6e8b6c7b-f8da-4d45-baeb-80ab0ab1d8b5
-Špython:S5720"@Rename "elements" to "self" or add the missing "self" parameter.(¡ºÑ üÿÿÿÿ8äá“¨å1J$69929e30-e212-4639-aa7f-66d4c1696dc6
-~python:S5720"9Rename "c" to "self" or add the missing "self" parameter.(‘®êŠ8–€ÊÁï1J$1df5ace4-f56b-43f7-8172-179d677836c0
-‡python:S5720"=Rename "label" to "self" or add the missing "self" parameter.(ÿàíƒşÿÿÿÿ8åá“¨å1J$b3c52bbd-5350-4849-a8d9-b9c94d397b9c
-‰python:S5720'"?Rename "counter" to "self" or add the missing "self" parameter.(Õ±Šòùÿÿÿÿ8åá“¨å1J$989e7542-5122-46f0-9934-969505eb5a51
-‡python:S5720+"BRename "graph_data" to "self" or add the missing "self" parameter.(¸ú™ë8åá“¨å1J$872a4058-5730-4e2d-9e9a-0ea711f8d082
-‚python:S57205"=Rename "lista" to "self" or add the missing "self" parameter.(£ıª8æá“¨å1J$5fb84ee9-7399-47be-88bf-63687fceea7e
-ˆpython:S5720—"=Rename "color" to "self" or add the missing "self" parameter.(¼Îş×üÿÿÿÿ8€ÊÁï1J$c428b7b4-c13d-4044-94e0-c8c7396f05eb
-ipython:S5719"Add a "self" or class parameter(³Æ½¢øÿÿÿÿ8çá“¨å1J$fad66265-a07f-4598-baa6-6db630a67ba2
-dpython:S5719"Add a "self" or class parameter(ì¿î¾8°€ÊÁï1J$42017ab4-e57b-45df-8eb4-4024e66a5187
-dpython:S5719~"Add a "self" or class parameter(ƒ«Í8ÚŞÓ¦å1J$a5b61dca-f174-49a0-be9c-c949a4570adb
-epython:S5719Š"Add a "self" or class parameter(ı·şç8ÛŞÓ¦å1J$bd9c3dfb-06f3-4743-b3cd-70d96d48c51f
-wpython:S1172+"2Remove the unused function parameter "graph_data".(¸ú™ë8ìá“¨å1J$52c4a7d4-7888-4f7c-b027-412c7f8b62c6
-lpython:S5603-"(Remove this unused function declaration.(ì˜Ót8îá“¨å1J$c925ae3c-8353-4283-8e6b-9cb6fc7f0ff2
-tpython:S1481˜")Remove the unused local variable "style".(ÿÿ²øüÿÿÿÿ8½€ÊÁï1J$2b39bc1c-750d-4ee3-b79c-79c435b35571
-python:S3457˜"EAdd replacement fields or use a normal string instead of an f-string.(ÿÿ²øüÿÿÿÿ8À€ÊÁï1J$1e80341f-676b-4cbc-ac48-b85616db665c
+upython:S1066ƒ"/Merge this if statement with the enclosing one.(ë¸ïè8ÆŞÓ¦å1J$610b04fd-020b-42d1-bb66-acd3e0f43b9a
+‘python:S2208"GImport only needed names or import the module and then use its members.(…¶ò¿şÿÿÿÿ8ãá“¨å1J$96c42375-a301-4a58-bcbc-c342c6edd11e
+‘python:S2208"GImport only needed names or import the module and then use its members.(Ì•ÿÿÿÿÿ8ãá“¨å1J$701b446e-9247-4092-8ffe-690ca93cd361
+Špython:S5720"@Rename "elements" to "self" or add the missing "self" parameter.(¡ºÑ üÿÿÿÿ8äá“¨å1J$cb279bef-5e93-4558-96a8-ea020ba677ed
+~python:S5720"9Rename "c" to "self" or add the missing "self" parameter.(‘®êŠ8–€ÊÁï1J$e7579d4d-aa32-419b-9347-56384c215793
+‡python:S5720"=Rename "label" to "self" or add the missing "self" parameter.(ÿàíƒşÿÿÿÿ8åá“¨å1J$c1abe0cb-a5ae-4c9a-8dd4-718bdf8eaf03
+‰python:S5720'"?Rename "counter" to "self" or add the missing "self" parameter.(Õ±Šòùÿÿÿÿ8åá“¨å1J$8a738c57-faa2-49fc-9acc-0d91f2b454fc
+‡python:S5720+"BRename "graph_data" to "self" or add the missing "self" parameter.(¸ú™ë8åá“¨å1J$3f5c042a-d49e-48e9-9423-c81a34d09915
+‚python:S57205"=Rename "lista" to "self" or add the missing "self" parameter.(£ıª8æá“¨å1J$7e63f2a6-5e9d-4501-9725-deceae138d34
+ˆpython:S5720—"=Rename "color" to "self" or add the missing "self" parameter.(¼Îş×üÿÿÿÿ8€ÊÁï1J$f3c10511-6375-45e7-821c-288947b7934d
+ipython:S5719"Add a "self" or class parameter(³Æ½¢øÿÿÿÿ8çá“¨å1J$6dc6e256-e9bd-4b96-be81-5dddc9849e50
+dpython:S5719"Add a "self" or class parameter(ì¿î¾8°€ÊÁï1J$0d7e6458-3fca-4379-88b4-572253b9e4c9
+dpython:S5719~"Add a "self" or class parameter(ƒ«Í8ÚŞÓ¦å1J$c2b7d1f3-cb1a-432a-8bd6-f443989bc7b9
+epython:S5719Š"Add a "self" or class parameter(ı·şç8ÛŞÓ¦å1J$e3183006-16ed-4fe4-9007-f034f6ec2629
+wpython:S1172+"2Remove the unused function parameter "graph_data".(¸ú™ë8ìá“¨å1J$436fbf8f-b71c-4373-a4f5-1f154804a494
+lpython:S5603-"(Remove this unused function declaration.(ì˜Ót8îá“¨å1J$d200cad1-df86-4619-b4be-4f37d2281edf
+tpython:S1481˜")Remove the unused local variable "style".(ÿÿ²øüÿÿÿÿ8½€ÊÁï1J$80f14411-4001-4ecb-837d-54b055fbac9a
+python:S3457˜"EAdd replacement fields or use a normal string instead of an f-string.(ÿÿ²øüÿÿÿÿ8À€ÊÁï1J$acb918b0-6a40-47e4-a324-83fc492ccc28

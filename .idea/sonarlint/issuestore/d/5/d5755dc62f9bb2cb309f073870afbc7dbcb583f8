@@ -1,11 +1,11 @@
 
-zpython:S1066Ç"/Merge this if statement with the enclosing one.(¢ÿµùÿÿÿÿ8üÖãÁï1J$40902147-0671-4de4-a29d-1bca35e86a0b
-Œpython:S2208"GImport only needed names or import the module and then use its members.(¦Şáß8Ã©Õ§å1J$af90b625-5393-4917-9476-6197f6dc5415
-python:S3776"TRefactor this function to reduce its Cognitive Complexity from 16 to the 15 allowed.(¾‡šÃúÿÿÿÿ8Ä©Õ§å1J$1da7a41c-8063-435d-ba17-a2d45e3d09f6
-Špython:S3457"EAdd replacement fields or use a normal string instead of an f-string.(ù«²¸8Ú†ÊÁï1J$53fc4686-81f0-4f6e-af70-583e3fddc5c2
-§python:S1171"^Rename this local variable "nombreArchivo" to match the regular expression ^[_a-z][a-z0-9_]*$.(áÎçûÿÿÿÿ8Ç©Õ§å1J$97b406e0-1ba9-498b-88f5-59f391f3192f
-Špython:S3457S"EAdd replacement fields or use a normal string instead of an f-string.(¾¨¼ô8Ü†ÊÁï1J$e5c0bcf7-cc90-4ab1-9ad4-a786253ad604
-python:S3457a"EAdd replacement fields or use a normal string instead of an f-string.(”¢ã‘ıÿÿÿÿ8İ†ÊÁï1J$1070aa8d-8e8f-49ca-ba49-6cc79e361022
-python:S3457o"EAdd replacement fields or use a normal string instead of an f-string.(Æè„„úÿÿÿÿ8Ş†ÊÁï1J$8124fce6-f015-4164-a02d-c53a16ab99f2
-python:S3457}"EAdd replacement fields or use a normal string instead of an f-string.(‡ê²Ûıÿÿÿÿ8ß†ÊÁï1J$d2517ecf-3e85-4c0e-bde3-9c6a39cf758f
-Ÿpython:S3776¼"TRefactor this function to reduce its Cognitive Complexity from 40 to the 15 allowed.(®Çğçøÿÿÿÿ8Œ×ãÁï1J$3125d971-8839-41a3-86fd-15ccf2079f68
+zpython:S1066Ç"/Merge this if statement with the enclosing one.(¢ÿµùÿÿÿÿ8üÖãÁï1J$b46dbe2c-93ae-413a-ad12-b538c8297b52
+Œpython:S2208"GImport only needed names or import the module and then use its members.(¦Şáß8Ã©Õ§å1J$ba32134a-ca6c-42ae-88b3-0daa3ff3efd1
+python:S3776"TRefactor this function to reduce its Cognitive Complexity from 16 to the 15 allowed.(¾‡šÃúÿÿÿÿ8Ä©Õ§å1J$bbe3ca88-f5c0-465d-aaeb-c71476f245eb
+Špython:S3457"EAdd replacement fields or use a normal string instead of an f-string.(ù«²¸8Ú†ÊÁï1J$f644b7f9-f2a5-4905-bd7b-c3e36fde2c98
+§python:S1171"^Rename this local variable "nombreArchivo" to match the regular expression ^[_a-z][a-z0-9_]*$.(áÎçûÿÿÿÿ8Ç©Õ§å1J$3a756057-7b9e-404c-9638-4a89586bf10d
+Špython:S3457S"EAdd replacement fields or use a normal string instead of an f-string.(¾¨¼ô8Ü†ÊÁï1J$ec38b849-d713-4ce8-a9d7-082d2df94349
+python:S3457a"EAdd replacement fields or use a normal string instead of an f-string.(”¢ã‘ıÿÿÿÿ8İ†ÊÁï1J$d57db9d4-ef33-4549-9c16-050353c46912
+python:S3457o"EAdd replacement fields or use a normal string instead of an f-string.(Æè„„úÿÿÿÿ8Ş†ÊÁï1J$5f302f5e-2abd-4552-8646-b71c0d8fbac8
+python:S3457}"EAdd replacement fields or use a normal string instead of an f-string.(‡ê²Ûıÿÿÿÿ8ß†ÊÁï1J$06f8057c-589a-4d6c-ac21-d3d76a9203f8
+Ÿpython:S3776¼"TRefactor this function to reduce its Cognitive Complexity from 40 to the 15 allowed.(®Çğçøÿÿÿÿ8Œ×ãÁï1J$fd48b1a4-383d-44d6-80a9-d799c70519a7
