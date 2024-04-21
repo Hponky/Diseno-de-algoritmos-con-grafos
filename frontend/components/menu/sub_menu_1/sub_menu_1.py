@@ -1,11 +1,6 @@
-import streamlit as st
-from streamlit_react_flow import react_flow
 from frontend.components.menu.sub_menu_1.sub_menu_2 import sub_menu_2
-from backend.utils import file_json
-from backend.models.graph import Elements
-from backend.generators import json_elements
 from backend.generators.graph_detector import *
-
+from backend.generators.find_minimun_loss_weight import *
 
 def file_menu():
    st.subheader("Seleccionaste el menu de archivo")
@@ -105,8 +100,6 @@ def graph_detector_menu():
     if selected_option == "Determinar componentes si el grafo es bipartito":
         componentes_conexas_bipartito(conexiones)
     elif selected_option == "Evaluar combinación con la mínima perdida de peso":
-        componentes_conexas_bipartito(conexiones)
-        print(conexiones, "esto entraaaaaaaa")
         min_edge_removal_cost_bipartite_subgraphs(elements)
 
 def execute_menu(elements):
