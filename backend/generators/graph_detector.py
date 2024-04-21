@@ -113,9 +113,7 @@ def procesar_vecinos(grafo, color, cola, nodo_actual, color_actual, nodo_colorea
 
     print(f"color: {color}")
 
-def colorear_bipartito(grafo):
-   # Inicializa un diccionario de colores para almacenar los colores de los nodos (0 o 1)
-   color = {}
+def colorear_bipartito(grafo, color):
    # Inicializa una cola para el recorrido BFS
    cola = []
    # Comienza el recorrido BFS desde un nodo arbitrario
@@ -136,14 +134,45 @@ def colorear_bipartito(grafo):
 
    return True, color, grafo_coloreado
 
+def fusionar_componentes(componentes, grafo):
+    for i in range(len(componentes)):
+        for j in range(i + 1, len(componentes)):
+            if not componentes[i].isdisjoint(componentes[j]):
+                componentes[i].update(componentes[j])
+    update = True
+    for nodo, conexiones in grafo.items():
+        if not conexiones:
+            for nodo2, conexiones in grafo.items():
+                if nodo in conexiones:
+                    update = False
+            if update:
+                componentes.append({nodo})
+
+def componentes_conexas_dep(componentes_conexas):
+    comp = []
+    componentes_conexas_unicas = []
+
+    for componentes in componentes_conexas:
+        add = True
+        for c in componentes:
+            if c not in comp:
+                comp.append(c)
+            else:
+                add = False
+        if add:
+            componentes_conexas_unicas.append(componentes)
+    return  componentes_conexas_unicas
+
 def componentes_conexas_bipartito(grafo):
-    def es_bipartito_y_componente(subgrafo):
-        es_bipartito, colores, grafo = colorear_bipartito(subgrafo)
+    def es_bipartito_y_componente(subgrafo, color):
+        es_bipartito, colores, grafo = colorear_bipartito(subgrafo, color)
         if not es_bipartito:
-            return False, set()
+            return False, set(), grafo
         return True, set(colores.keys()), grafo
 
     print(grafo, "esto es grafo bipártito")
+    # Inicializa un diccionario de colores para almacenar los colores de los nodos (0 o 1)
+    color = {}
     graph = []
     visitados_global = set()
     componentes = []
@@ -152,7 +181,7 @@ def componentes_conexas_bipartito(grafo):
     for nodo in grafo:
         if nodo not in visitados_global:
             subgrafo = {n: grafo[n] for n in grafo if n not in visitados_global}
-            es_bipartito, componente, graph2 = es_bipartito_y_componente(subgrafo)
+            es_bipartito, componente, graph2 = es_bipartito_y_componente(subgrafo, color)
             for element in graph2:
                 if element not in graph:
                     graph.append(element)
@@ -167,36 +196,13 @@ def componentes_conexas_bipartito(grafo):
         return
 
     # Fusionar componentes que están conectadas entre sí
-    for i in range(len(componentes)):
-        for j in range(i + 1, len(componentes)):
-            if not componentes[i].isdisjoint(componentes[j]):
-                componentes[i].update(componentes[j])
-    update = True
-    for nodo, conexiones in grafo.items():
-        if not conexiones:
-            for nodo2, conexiones in grafo.items():
-                if nodo in conexiones:
-                    update = False
-            if update:
-                componentes.append({nodo})
+    fusionar_componentes(componentes, grafo)
 
     # Eliminar componentes vacías y devolver las componentes conexas
     componentes_conexas = [c for c in componentes if c]
     print("componentes conexas: ", componentes_conexas)
 
-    comp = []
-    componentes_conexas_unicas = []
-
-    for componentes in componentes_conexas:
-        add = True
-        for c in componentes:
-            if c not in comp:
-                comp.append(c)
-            else:
-                add = False
-        if add:
-            componentes_conexas_unicas.append(componentes)
-
+    componentes_conexas_unicas = componentes_conexas_dep(componentes_conexas)
 
     num_componentes_conexas = len(componentes_conexas_unicas)
 
