@@ -107,15 +107,14 @@ def definir_colores(grafo):
             if not conexiones:
                 color[nodo] = 1
 
-    print(color, "coloooooor")
     return color
 
 def definir_componentes(grafo):
-    aislado = True
     componentes = []
     componente = set()
     visitados = []
     for nodo, conexiones in grafo.items():
+        aislado = True
         if not conexiones:
             for nodo2, conexiones2 in grafo.items():
                 if nodo in conexiones2:
@@ -222,9 +221,9 @@ def min_edge_removal_cost_bipartite_subgraphs(datos):
     subgrafos, resultados = generar_subgrafos(grafo_ejemplo)
     # Llamar a la función para encontrar la combinación con la menor pérdida de peso
     combinacion_minima, resultado_minimo = encontrar_combinacion_minima(subgrafos, resultados)
-    print("Combinación con la menor pérdida de peso:")
-    print(combinacion_minima)
-    print("Resultado mínimo:", resultado_minimo)
+    st.success(f"Combinación con la menor pérdida de peso:\n{combinacion_minima}")
+    st.success(f"Resultado mínimo: {resultado_minimo}")
+
 
 def generar_subgrafos(grafo):
     nodos = grafo.keys()

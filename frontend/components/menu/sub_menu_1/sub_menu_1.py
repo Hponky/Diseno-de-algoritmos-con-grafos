@@ -6,14 +6,12 @@ from backend.models.graph import Elements
 from backend.generators import json_elements
 from backend.generators.graph_detector import *
 
-
 def file_menu():
    st.subheader("Seleccionaste el menu de archivo")
    # Opciones del submenú "Archivo"
    file_options = ["Nuevo Grafo", "Abrir", "Cerrar", "Guardar", "Guardar como", "Exportar Datos", "Importar Datos",
                    "Salir"]
    selected_option = st.sidebar.selectbox("Opciones de Archivo", file_options, index=1)
-
 
    if selected_option is not None:
        if selected_option == "Nuevo Grafo":
@@ -65,11 +63,7 @@ def file_menu():
        else:
            st.write(f"Seleccionaste la opción de archivo: {selected_option}")
 
-
    return Elements
-
-
-
 
 def edit_menu():
    if Elements.get_elements():
@@ -86,8 +80,6 @@ def edit_menu():
                sub_menu_2.edit_arco_menu()
            elif selected_option == "Deshacer":
                Elements.set_elements(Elements.undo_last_change(Elements.get_elements()))
-
-
    else:
        st.subheader("Selecciona un archivo a editar, o crea un grafo")
 
@@ -104,9 +96,8 @@ def graph_detector_menu():
     conexiones = grafo_formateado(elements)
     if selected_option == "Determinar componentes si el grafo es bipartito":
         componentes_conexas_bipartito(conexiones)
-    elif selected_option == "Evaluar combinación con la mínima perdida de peso":
+    if selected_option == "Evaluar combinación con la mínima perdida de peso":
         componentes_conexas_bipartito(conexiones)
-        print(conexiones, "esto entraaaaaaaa")
         min_edge_removal_cost_bipartite_subgraphs(elements)
 
 def execute_menu(elements):
@@ -116,14 +107,10 @@ def execute_menu(elements):
    execute_options = ["Procesos"]
    selected_option = st.sidebar.selectbox("Opciones de Ejecutar", execute_options)
 
-
    if selected_option == "Procesos":
        processes_menu()
    else:
        st.write(f"Seleccionaste la opción de procesos: {selected_option}")
-
-
-
 
 def tools_menu(elements):
    st.subheader("Seleccionaste el menu de herramientas")
@@ -132,12 +119,8 @@ def tools_menu(elements):
    tools_options = ["Ventana Gráfica", "Tabla"]
    selected_option = st.sidebar.selectbox("Opciones de Herramientas", tools_options)
 
-
    # Mostrar mensaje dependiendo de la opción seleccionada
    st.write(f"Seleccionaste la opción de herramientas: {selected_option}")
-
-
-
 
 def window_menu(elements):
    st.subheader("Seleccionaste el menu de ventana")
@@ -145,7 +128,6 @@ def window_menu(elements):
    # Opciones del submenú "Ventana"
    window_options = ["Gráfica", "Tabla"]
    selected_option = st.sidebar.selectbox("Opciones de Ventana", window_options)
-
 
    # Mostrar mensaje dependiendo de la opción seleccionada
    st.write(f"Seleccionaste la opción de ventana: {selected_option}")
@@ -156,7 +138,6 @@ def help_menu(elements):
    # Opciones del submenú "Ayuda"
    help_options = ["Ayuda", "Acerca de Grafos"]
    selected_option = st.sidebar.selectbox("Opciones de Ayuda", help_options)
-
 
    # Mostrar mensaje dependiendo de la opción seleccionada
    st.write(f"Seleccionaste la opción de ayuda: {selected_option}")
