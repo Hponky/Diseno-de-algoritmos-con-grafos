@@ -1,6 +1,6 @@
 
-python:S3776"TRefactor this function to reduce its Cognitive Complexity from 39 to the 15 allowed.(¢óÎüÿÿÿÿ8·¹ğğï1J$91ca5251-c509-4e50-a578-7c5f404fd54e
-ypython:S1481x"/Remove the unused local variable "nodo_inical".(¾æ œùÿÿÿÿ8¹¹ğğï1J$d122d3c1-adad-4463-8d0b-fcb7c0b40212
-Ÿpython:S3776‰"TRefactor this function to reduce its Cognitive Complexity from 19 to the 15 allowed.(Ù†£Àüÿÿÿÿ8¹¹ğğï1J$ba747b0e-acd9-4f41-b171-3f2fc713561d
-cpython:S3626Ø"Remove this redundant return.(ÙãŞŸ8º¹ğğï1J$2722d2d2-a4f1-4777-ab5d-76d7bd4de820
-špython:S3776¦"TRefactor this function to reduce its Cognitive Complexity from 20 to the 15 allowed.(Ö›¦ 8»¹ğğï1J$abb4c0aa-a5bd-4e18-bae0-6dc2925df77f
+python:S3776"TRefactor this function to reduce its Cognitive Complexity from 39 to the 15 allowed.(¢óÎüÿÿÿÿ8ğ§¨òï1J$e8b708df-cc45-432b-94f9-1db04f802591
+ypython:S1481x"/Remove the unused local variable "nodo_inical".(¾æ œùÿÿÿÿ8ò§¨òï1J$21c8111b-8c6d-42df-b5e2-f87ec5f6427e
+Ÿpython:S3776‰"TRefactor this function to reduce its Cognitive Complexity from 19 to the 15 allowed.(Ù†£Àüÿÿÿÿ8ò§¨òï1J$817bcd6a-f1ef-4def-bf68-a90469fffab6
+cpython:S3626ë"Remove this redundant return.(ÙãŞŸ8ó§¨òï1J$54b7f3b1-f277-4c3f-a594-2d48de24bd30
+špython:S3776¸"TRefactor this function to reduce its Cognitive Complexity from 21 to the 15 allowed.(Ö›¦ 8ó§¨òï1J$1fb0ff48-9c7a-442a-b045-7e74341db2a7

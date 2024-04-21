@@ -163,6 +163,24 @@ def componentes_conexas_dep(componentes_conexas):
             componentes_conexas_unicas.append(componentes)
     return  componentes_conexas_unicas
 
+def contar_aristas(grafo,graph):
+    origin = 0
+    for element, conexiones in grafo.items():
+        origin += len(conexiones)
+    print(origin, "origin")
+
+    sets = 0
+    for element in graph:
+        if element['id'].startswith('edge'):
+            sets+=1
+    print(sets, "sets")
+
+    if origin == sets:
+        return False
+    else:
+        return True
+
+
 def componentes_conexas_bipartito(grafo):
     def es_bipartito_y_componente(subgrafo, color):
         es_bipartito, colores, grafo = colorear_bipartito(subgrafo, color)
@@ -191,7 +209,8 @@ def componentes_conexas_bipartito(grafo):
             componentes.append(componente)
             visitados_global.update(componente)
 
-    if not es_bipartito_global:
+
+    if not es_bipartito_global or contar_aristas(grafo,graph):
         st.error("El grafo no es bipartito.")
         return
 
