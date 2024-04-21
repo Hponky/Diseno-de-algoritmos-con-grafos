@@ -92,18 +92,22 @@ def edit_menu():
        st.subheader("Selecciona un archivo a editar, o crea un grafo")
 
 def graph_detector_menu():
-   st.subheader("Detector de Grafos")
+    st.subheader("Detector de Grafos")
 
-   # Opciones del submenú "Detector de Grafos"
-   detector_options = ["Determinar componentes si el grafo es bipartito"]
+    # Opciones del submenú "Detector de Grafos"
+    detector_options = ["Determinar componentes si el grafo es bipartito",
+                        "Evaluar combinación con la mínima perdida de peso"]
 
-   selected_option = st.sidebar.selectbox("Opciones del Detector de Grafos", detector_options)
+    selected_option = st.sidebar.selectbox("Opciones del Detector de Grafos", detector_options)
 
-   elements = Elements.get_elements()
-   conexiones = detectar_bipartito(elements)
-   if selected_option == "Determinar componentes si el grafo es bipartito":
-           componentes_conexas_bipartito(conexiones)
-
+    elements = Elements.get_elements()
+    conexiones = grafo_formateado(elements)
+    if selected_option == "Determinar componentes si el grafo es bipartito":
+        componentes_conexas_bipartito(conexiones)
+    elif selected_option == "Evaluar combinación con la mínima perdida de peso":
+        componentes_conexas_bipartito(conexiones)
+        print(conexiones, "esto entraaaaaaaa")
+        min_edge_removal_cost_bipartite_subgraphs(elements)
 
 def execute_menu(elements):
    st.subheader("Seleccionaste el menu de ejecutar")

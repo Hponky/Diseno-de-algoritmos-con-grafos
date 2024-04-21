@@ -1,0 +1,111 @@
+{
+  "graph": [
+    {
+      "name": "G",
+      "data": [
+        {
+          "id": 1,
+          "label": "A",
+          "data": {},
+          "type": " ",
+          "linkedTo": [
+            {
+              "nodeId": 5,
+              "weight": 0.0
+            },
+            {
+              "nodeId": 6,
+              "weight": 0.5
+            }
+          ],
+          "radius": 0.4,
+          "coordenates": {
+            "x": 50,
+            "y": 50
+          }
+        },
+        {
+          "id": 2,
+          "label": "B",
+          "data": {},
+          "type": "Object",
+          "linkedTo": [
+            {
+              "nodeId": 4,
+              "weight": 0.5
+            },
+            {
+              "nodeId": 6,
+              "weight": 0.5
+            }
+          ],
+          "radius": 0.2,
+          "coordenates": {
+            "x": 50,
+            "y": 150
+          }
+        },
+        {
+          "id": 3,
+          "label": "C",
+          "data": {},
+          "type": " ",
+          "linkedTo": [
+            {
+              "nodeId": 4,
+              "weight": 0.5
+            },
+            {
+              "nodeId": 5,
+              "weight": 0.25
+            }
+          ],
+          "radius": 1,
+          "coordenates": {
+            "x": 50,
+            "y": 250
+          }
+        },
+        {
+          "id": 4,
+          "label": "A'",
+          "data": {},
+          "type": "function",
+          "linkedTo": [],
+          "radius": 0.6,
+          "coordenates": {
+            "x": 350,
+            "y": 50
+          }
+        },
+        {
+          "id": 5,
+          "label": "B'",
+          "data": {},
+          "type": "function",
+          "linkedTo": [],
+          "radius": 0.6,
+          "coordenates": {
+            "x": 350,
+            "y": 150
+          }
+        },
+        {
+          "id": 6,
+          "label": "C'",
+          "data": {},
+          "type": "function",
+          "linkedTo": [],
+          "radius": 0.6,
+          "coordenates": {
+            "x": 350,
+            "y": 250
+          }
+        }
+      ]
+    }
+  ],
+  "generalData1": 100,
+  "generalData2": "Alg",
+  "generalData3": 300
+}
