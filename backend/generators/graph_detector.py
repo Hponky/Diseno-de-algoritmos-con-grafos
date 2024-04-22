@@ -4,6 +4,8 @@ from streamlit_react_flow import react_flow
 from collections import deque
 from backend.models.graph import Elements
 import itertools
+import numpy as np
+from scipy.stats import wasserstein_distance
 
 def grafo_formateado(datos):
    st.subheader("Determinar si el grafo es bipartito")
@@ -173,7 +175,7 @@ def es_bipartito_y_componente(colores, grafo):
 def componentes_conexas_bipartito(grafo):
     # Se inicializa el grafo
     graph = []
-
+    print(grafo, "grafoooo")
     # Se definen las componentes del grafo
     componentes_conexas = definir_componentes(grafo)
 
@@ -216,109 +218,108 @@ def componentes_conexas_bipartito(grafo):
             return
 
 def min_edge_removal_cost_bipartite_subgraphs(datos):
-    print(grafo_formateado_con_pesos(datos), "lo que devuelve la nueva funcion")
     grafo_ejemplo = grafo_formateado_con_pesos(datos)
-    subgrafos, resultados = generar_subgrafos(grafo_ejemplo)
-    # Llamar a la función para encontrar la combinación con la menor pérdida de peso
-    combinacion_minima, resultado_minimo = encontrar_combinacion_minima(subgrafos, resultados)
-    st.success(f"Combinación con la menor pérdida de peso:\n{combinacion_minima}")
+    combinacion_minima, resultado_minimo = encontrar_resultado_minimo(grafo_ejemplo)
+    st.success(f"Combinación con la menor pérdida de peso: {combinacion_minima}")
     st.success(f"Resultado mínimo: {resultado_minimo}")
 
+def encontrar_resultado_minimo(grafo):
+    nodos = list(grafo.keys())
+    n = len(nodos)
 
-def generar_subgrafos(grafo):
-    nodos = grafo.keys()
+    # Inicializar la tabla de memoización para almacenar los resultados de los subproblemas
+    dp = {}
 
-    # Generar todas las combinaciones posibles de nodos en dos conjuntos
-    combinaciones_validas = []
-    for i in range(1, len(nodos)):
+    # Inicializar variables para almacenar la combinación de subgrafos con el resultado mínimo
+    combinacion_minima = None
+    resultado_minimo = float('inf')
+
+    # Calcular el resultado mínimo utilizando programación dinámica
+    for i in range(1, n):
         for conjunto1 in itertools.combinations(nodos, i):
             conjunto1 = set(conjunto1)
             conjunto2 = set(nodos) - conjunto1
-            if len(conjunto2) > 0:
-                combinaciones_validas.append((conjunto1, conjunto2))
-
-    # Filtrar combinaciones válidas según la suma de nodos
-    combinaciones_filtradas = []
-    for conjunto1, conjunto2 in combinaciones_validas:
-        if len(conjunto1) + len(conjunto2) == len(nodos):
             subgrafo1 = {nodo: grafo[nodo] for nodo in conjunto1}
             subgrafo2 = {nodo: grafo[nodo] for nodo in conjunto2}
-            combinaciones_filtradas.append((subgrafo1, subgrafo2))
+            resultado = calcular_resultado_combinacion(subgrafo1, subgrafo2, grafo, dp)
+            if resultado < resultado_minimo:
+                resultado_minimo = resultado
+                combinacion_minima = (list(conjunto1), list(conjunto2))
 
-    # Convertir cada subgrafo a la misma estructura de datos que grafo_ejemplo
-    subgrafos_formateados = []
-    for idx, (subgrafo1, subgrafo2) in enumerate(combinaciones_filtradas, start=1):
-        subgrafo1_format = {nodo: grafo[nodo] for nodo in subgrafo1}
-        subgrafo2_format = {nodo: grafo[nodo] for nodo in subgrafo2}
-        subgrafos_formateados.append((subgrafo1_format, subgrafo2_format))
+    return combinacion_minima, resultado_minimo
 
-    # Calcular el resultado para cada combinación
-    resultados_combinaciones = []
-    for subgrafo1, subgrafo2 in subgrafos_formateados:
-        resultado_combinacion = calcular_resultado_combinacion(subgrafo1, subgrafo2, grafo)
-        resultados_combinaciones.append(resultado_combinacion)
 
-    # Devolver las combinaciones de subgrafos y sus resultados correspondientes
-    return subgrafos_formateados, resultados_combinaciones
+def calcular_resultado_combinacion(subgrafo1, subgrafo2, grafo_original, dp):
+    # Verificar si ya hemos calculado el resultado para esta combinación de subgrafos
+    if (frozenset(subgrafo1.keys()), frozenset(subgrafo2.keys())) in dp:
+        return dp[(frozenset(subgrafo1.keys()), frozenset(subgrafo2.keys()))]
 
-def calcular_resultado_combinacion(subgrafo1, subgrafo2, grafo_original):
-    # Hacer una copia profunda del grafo original para evitar modificar el original
-    grafo_modificado = {nodo: conexiones.copy() for nodo, conexiones in grafo_original.items()}
-
-    # Inicializar el resultado
+    # Calcular el resultado para la combinación de subgrafos
     resultado = 0
-
-    # Diccionario para almacenar los pesos de las conexiones eliminadas por nodo destino
-    pesos_eliminados_por_nodo = {}
 
     # Recorrer las conexiones del subgrafo1
     for nodo, conexiones in subgrafo1.items():
         for nodo_destino, peso in conexiones.items():
             # Verificar si el nodo destino está en el subgrafo2
             if nodo_destino in subgrafo2:
-                # Si es la primera conexión hacia este nodo, guardar su peso
-                if nodo_destino not in pesos_eliminados_por_nodo:
-                    pesos_eliminados_por_nodo[nodo_destino] = [peso]
-                else:
-                    pesos_eliminados_por_nodo[nodo_destino].append(peso)
-                # Eliminar la conexión del grafo modificado
-                del grafo_modificado[nodo][nodo_destino]
+                resultado += peso
 
     # Recorrer las conexiones del subgrafo2
     for nodo, conexiones in subgrafo2.items():
         for nodo_destino, peso in conexiones.items():
             # Verificar si el nodo destino está en el subgrafo1
             if nodo_destino in subgrafo1:
-                # Si es la primera conexión hacia este nodo, guardar su peso
-                if nodo_destino not in pesos_eliminados_por_nodo:
-                    pesos_eliminados_por_nodo[nodo_destino] = [peso]
-                else:
-                    pesos_eliminados_por_nodo[nodo_destino].append(peso)
-                # Eliminar la conexión del grafo modificado
-                del grafo_modificado[nodo][nodo_destino]
+                resultado += peso
 
-    # Calcular el resultado para cada nodo destino
-    for nodo_destino, pesos in pesos_eliminados_por_nodo.items():
-        # Obtener el peso máximo y la suma de todos los pesos
-        peso_maximo = max(pesos)
-        suma_pesos = sum(pesos)
-        # Calcular el resultado como un valor aleatorio entre el peso máximo y la suma de todos los pesos
-        resultado += random.uniform(peso_maximo, suma_pesos)
+    # Almacenar el resultado en la tabla de memoización
+    dp[(frozenset(subgrafo1.keys()), frozenset(subgrafo2.keys()))] = resultado
 
     return resultado
 
-def encontrar_combinacion_minima(subgrafos, resultados):
-    # Inicializamos las variables para almacenar la combinación mínima y su resultado
-    combinacion_minima = None
-    resultado_minimo = float('inf')  # Inicializamos con un valor infinito
+def generar_divisiones_sistema_original(sistema_original):
+    nodos = list(sistema_original.keys())
+    n = len(nodos)
+    divisiones = []
 
-    # Iteramos sobre cada combinación y su resultado
-    for idx, (subgrafo1, subgrafo2) in enumerate(subgrafos, start=1):
-        resultado = resultados[idx - 1]
-        # Si el resultado actual es menor que el mínimo registrado, actualizamos la combinación mínima
-        if resultado < resultado_minimo:
-            resultado_minimo = resultado
-            combinacion_minima = (subgrafo1, subgrafo2)
+    # Generar todas las combinaciones posibles de subconjuntos de nodos
+    for i in range(1, n):
+        for subconjunto_nodos in itertools.combinations(nodos, i):
+            subconjunto_nodos = set(subconjunto_nodos)
+            divisiones.append(subconjunto_nodos)
 
-    # Retornamos la combinación mínima y su resultado
-    return combinacion_minima, resultado_minimo
+    return divisiones
+
+
+def calcular_diferencia_informacion(sistema_original, sistema_dividido):
+    # Convertir las distribuciones de probabilidad en matrices numpy
+    original_matrix = np.array([sistema_original[nodo] for nodo in sistema_original])
+    dividido_matrix = np.array([sistema_dividido[nodo] for nodo in sistema_dividido])
+
+    # Calcular la diferencia de información utilizando la distancia de Wasserstein (EMD)
+    diferencia_informacion = wasserstein_distance(original_matrix.flatten(), dividido_matrix.flatten())
+
+    return diferencia_informacion
+
+
+def encontrar_division_optima(sistema_original):
+    divisiones = generar_divisiones_sistema_original(sistema_original)
+    mejor_division = None
+    mejor_diferencia_informacion = float('inf')
+
+    for division in divisiones:
+        sistema_dividido = obtener_sistema_dividido(sistema_original, division)
+        diferencia_informacion = calcular_diferencia_informacion(sistema_original, sistema_dividido)
+        if diferencia_informacion < mejor_diferencia_informacion:
+            mejor_division = division
+            mejor_diferencia_informacion = diferencia_informacion
+
+    return mejor_division
+
+
+def obtener_sistema_dividido(sistema_original, division):
+    sistema_dividido = {}
+    for nodo, distribucion in sistema_original.items():
+        if nodo in division:
+            sistema_dividido[nodo] = distribucion
+
+    return sistema_dividido

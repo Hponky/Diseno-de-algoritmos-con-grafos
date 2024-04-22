@@ -88,9 +88,10 @@ def graph_detector_menu():
 
     # Opciones del submenú "Detector de Grafos"
     detector_options = ["Determinar componentes si el grafo es bipartito",
-                        "Evaluar combinación con la mínima perdida de peso"]
+                        "Evaluar combinación con la mínima perdida de peso",
+                        "Dividir sistema con menor diferencia de información"]
 
-    selected_option = st.sidebar.selectbox("Opciones del Detector de Grafos", detector_options)
+    selected_option = st.sidebar.selectbox("Opciones del Detector de Grafos", detector_options, index = 0)
 
     elements = Elements.get_elements()
     conexiones = grafo_formateado(elements)
@@ -99,6 +100,15 @@ def graph_detector_menu():
     if selected_option == "Evaluar combinación con la mínima perdida de peso":
         componentes_conexas_bipartito(conexiones)
         min_edge_removal_cost_bipartite_subgraphs(elements)
+    if selected_option == "Dividir sistema con menor diferencia de información":
+        sistema_original = {
+            'A': [0, 1, 0, 1, 0, 1, 0, 1],
+            'B': [0, 0, 1, 1, 0, 0, 1, 1],
+            'C': [0, 0, 0, 0, 1, 1, 1, 1]
+        }
+
+        mejor_division = encontrar_division_optima(sistema_original)
+        print("División óptima:", mejor_division)
 
 def execute_menu(elements):
    st.subheader("Seleccionaste el menu de ejecutar")
