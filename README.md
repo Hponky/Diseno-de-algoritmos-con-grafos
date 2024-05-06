@@ -10,4 +10,4 @@ Para correr el programa se recomiendo usar pyCharm con python 3.10 y correr los 
 
 Para correr la aplicación el el local host 8501:
 
-    streamlit run C:\Users\chech\PycharmProjects\graph\main.py 
+    streamlit run main.py 
