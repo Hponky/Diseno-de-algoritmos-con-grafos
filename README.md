@@ -1,5 +1,6 @@
-Para correr el programa se recomiendo usar pyCharm con python 3.10 y correr los siguientes comandos antes de ejecutar la aplicación web.
+Para correr el programa se recomienda usar pyCharm con python 3.10 o 3.12 y correr los siguientes comandos antes de ejecutar la aplicación web.
 
+    pip install openpyxl
     pip install streamlit  
     pip install streamlit-react-flow                           
     
