@@ -8,11 +8,12 @@ import numpy as np
 from scipy.stats import wasserstein_distance
 
 
+graph = []
+
+
 def grafo_formateado(datos):
-  st.subheader("Determinar si el grafo es bipartito")
-
-
   grafo = {}
+  graph = Grafo()
 
 
   for elemento in datos:
@@ -28,6 +29,16 @@ def grafo_formateado(datos):
                                   nodo_adyacente = otro_elemento['data']['label']
                                   grafo[nodo].append(nodo_adyacente)
                                   break
+  for elemento in datos:
+      if 'source' in elemento and 'target' in elemento:
+          if elemento['animated'] == False:
+              for nodo, conexiones in grafo.items():
+                  if nodo == graph.get_element_label_by_id(elemento['source']):
+                      grafo[nodo].append(graph.get_element_label_by_id(elemento['target']))
+                  if nodo == graph.get_element_label_by_id(elemento['target']):
+                      grafo[nodo].append(graph.get_element_label_by_id(elemento['source']))
+
+
   return grafo
 
 
@@ -58,7 +69,7 @@ def colorear_nodo(nodo_actual, color_actual, sumador0, sumador1):
    else:
        sumador1 += 120
    nodo_coloreado = {
-       "id": str(nodo_actual),
+       "id": random.randint(10000,99999),
        "type": "default",
        "data": {"label": f"{str(nodo_actual)}"},
        "style": {
@@ -115,7 +126,19 @@ def definir_colores(grafo):
                    color[nodo] = 1 - color[con]
                    break
                else:
-                   color[nodo] = 0
+                   col = True
+                   for nodo2, colour in color.items():
+                       if nodo == nodo2:
+                           col = False
+                   if col:
+                       color[nodo] = 0
+                       color[con] = 1
+
+
+
+
+
+
            if not conexiones:
                color[nodo] = 1
 
@@ -190,8 +213,8 @@ def es_bipartito_y_componente(colores, grafo):
 
 
 def componentes_conexas_bipartito(grafo):
-   # Se inicializa el grafo
-   graph = []
+   global graph
+   g = Grafo()
    print(grafo, "grafoooo")
    # Se definen las componentes del grafo
    componentes_conexas = definir_componentes(grafo)
@@ -222,10 +245,21 @@ def componentes_conexas_bipartito(grafo):
 
 
        # Graficar aristas
+       prueba = []
        for nodo, conexiones in grafo.items():
            for con in conexiones:
-               arista = arista_coloreado(nodo,con)
-               graph.append(arista)
+               if f'{nodo},{con}' in g.get_nodos_no_dirigidos():
+                   origen = g.get_element_by_label(graph,nodo)
+                   destino = g.get_element_by_label(graph,con)
+                   prueba = g.add_edge(prueba,origen,destino,False,0)
+               else:
+                   arista = arista_coloreado(nodo,con)
+                   graph.append(arista)
+
+
+       for element in prueba:
+           if element not in graph:
+               graph.append(element)
 
 
        num_componentes_conexas = len(componentes_conexas)
@@ -236,9 +270,9 @@ def componentes_conexas_bipartito(grafo):
        else:
            st.success(
                f"El grafo es bipartito y tiene {num_componentes_conexas} {'componente' if num_componentes_conexas == 1 else 'componentes'} conexas: {componentes_conexas}")
-           flow_styles = {"height": 500, "width": 800}
-           react_flow("graph", elements=graph, flow_styles=flow_styles)
-           return
+   flow_styles = {"height": 500, "width": 800}
+   print(graph)
+   react_flow("graph", elements=graph, flow_styles=flow_styles)
 
 
 def min_edge_removal_cost_bipartite_subgraphs(datos):
@@ -295,7 +329,7 @@ def calcular_resultado_combinacion(subgrafo1, subgrafo2, grafo_original, dp):
        for nodo_destino, peso in conexiones.items():
            # Verificar si el nodo destino está en el subgrafo2
            if nodo_destino in subgrafo2:
-               resultado += peso
+               resultado += int(peso)
 
 
    # Recorrer las conexiones del subgrafo2
@@ -303,7 +337,7 @@ def calcular_resultado_combinacion(subgrafo1, subgrafo2, grafo_original, dp):
        for nodo_destino, peso in conexiones.items():
            # Verificar si el nodo destino está en el subgrafo1
            if nodo_destino in subgrafo1:
-               resultado += peso
+               resultado += int(peso)
 
 
    # Almacenar el resultado en la tabla de memoización
@@ -373,4 +407,6 @@ def obtener_sistema_dividido(sistema_original, division):
 
 
    return sistema_dividido
+
+
 

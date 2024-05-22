@@ -1,13 +1,49 @@
 import random
+import pandas as pd
+
+
 from .sub_menu_3.sub_menu_3 import *
 from backend.utils import file_json
 from backend.generators import json_elements
 from backend.models.graph import Grafo
 from backend.generators import graph_generator
 from streamlit_react_flow import react_flow
+from backend.generators import graph_probability
 
 
 Elements = Grafo()
+clicks = 0
+
+
+def strategy_1_menu():
+   st.subheader('Estrategia 1')
+   global clicks
+
+
+   options = ['Editar la Matriz de Probabilidades', 'Volver a la Matriz Original', 'Ingresar Sistema a Trabajar']
+   selected_option = st.sidebar.selectbox('Opciones:', options, index = 2)
+
+
+   if selected_option == 'Editar la Matriz de Probabilidades':
+       st.write("Editar Matriz de Probabilidades")
+       graph_probability.editar_matriz()
+
+
+   if selected_option == 'Volver a la Matriz Original':
+       st.write("Volver a la Matriz Original")
+       graph_probability.restablecer_matriz()
+
+
+   st.write("Matriz de Probabilidades:")
+   graph_probability.mostrar_tabla(graph_probability.probabilities)
+
+
+   if selected_option == 'Ingresar Sistema a Trabajar':
+       graph_probability.trabajar_sistema()
+
+
+
+
 
 
 def new_grafo_menu():
@@ -158,7 +194,7 @@ def edit_arco_menu():
        st.write(f"Seleccionaste la opción de edición de arista: {selected_option}")
        st.write(f"Tipo de arista seleccionada: {tipo_arista}")
        if selected_option == "Agregar":
-           graph_generator.manual_conection(Elements.get_elements(), tipo_arista)
+           graph_generator.manual_conection(tipo_arista)
        elif selected_option == "Eliminar":
            eliminar_conexion()
    Elements.display_flow()
@@ -167,8 +203,21 @@ def edit_arco_menu():
 
 
 def obtener_nodos_conectados(elementos):
-   nodos_conectados_origen = {str(element.get('source')) for element in elementos if 'source' in element}
-   nodos_conectados_destino = {str(element.get('target')) for element in elementos if 'target' in element}
+   nodos_conectados_origen = {}
+   nodos_conectados_destino = {}
+   for element in elementos:
+       if 'source' in element:
+           nodos_conectados_origen[str(element.get('source'))] = (str(element.get('source')))
+           if 'animated' in element:
+               if not element['animated']:
+                   nodos_conectados_destino[str(element.get('source'))] = (str(element.get('source')))
+       if 'target' in element:
+           nodos_conectados_destino[str(element.get('target'))]=(str(element.get('target')))
+           if 'animated' in element:
+               if not element['animated']:
+                   nodos_conectados_origen[str(element.get('target'))] = (str(element.get('target')))
+
+
    return nodos_conectados_origen, nodos_conectados_destino
 
 
@@ -206,37 +255,18 @@ def eliminar_conexion():
                source_id = encontrar_id_nodo(origen, elementos)
                target_id = encontrar_id_nodo(destino, elementos)
                if source_id is not None and target_id is not None:
-                   updated_elements = [element for element in elementos
-                                       if not ('source' in element and 'target' in element
-                                               and str(element.get('source', 0)) == source_id
-                                               and str(element.get('target', 0)) == target_id)]
-                   for element in updated_elements:
-                       element_id = get_element_id(element)
-                       if not element_id.startswith('edge'):
-                           if str(element_id) == source_id:
-                               element['linkedTo'] = [link for link in element.get('linkedTo', []) if
-                                                      link.get('nodeId') != target_id]
-
-
-                   if len(updated_elements) < len(elementos):
-                       st.success(f"Conexión de '{origen}' a '{destino}' eliminada correctamente")
-                       Elements.set_elements(updated_elements)
-                   else:
-                       st.warning("No se encontró la conexión para eliminar")
+                   Elements.delete_conetion(elementos,source_id,target_id, origen, destino)
                else:
                    st.warning("No se encontraron los nodos de origen y destino especificados")
    else:
        st.subheader("No hay aristas a eliminar")
-def get_element_id(element):
-   id_value = element.get('id')
-   if isinstance(id_value, int):  # Verificar si el ID es un entero
-       return str(id_value)
-   return id_value
 
 
 def processes_menu():
    options = ["Proceso 1", "Proceso 2", "Proceso 3"]
    selected_option = st.sidebar.selectbox("Seleccionar proceso", options)
    st.write(f"Seleccionaste la opción de ejecución de procesos: {selected_option}")
+
+
 
 

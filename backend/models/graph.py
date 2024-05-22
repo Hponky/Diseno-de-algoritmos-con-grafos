@@ -31,10 +31,42 @@ class Grafo:
        self.elementos = elements
 
 
+   def get_element_id(self, element):
+       id_value = element.get('id')
+       if isinstance(id_value, int):  # Verificar si el ID es un entero
+           return str(id_value)
+       return id_value
+
+
+   def get_element_label_by_id(self, id):
+       for element in self.get_elements():
+           if element['id'] == id:
+               return element['data']['label']
+       return id
+
+
+   def get_element_by_label(self, grafo, label):
+       for element in grafo:
+           if 'data' in element:
+               if element['data']['label'] == label:
+                   return element
+
+
+   def get_nodos_no_dirigidos(self):
+       nodos = []
+       for elemento in self.get_elements():
+           if 'source' in elemento and 'target' in elemento:
+               if elemento['animated'] == False:
+                   cod = (f'{self.get_element_label_by_id(elemento["source"])},'
+                          f'{self.get_element_label_by_id(elemento["target"])}')
+                   nodos.append(cod)
+       return nodos
+
+
    def add_nodes_random(self,num_nodes):
        for i in range(num_nodes):
            label = ''.join(random.choices(string.ascii_uppercase, k=3))
-           change = self.add_node(self.get_elements(), i, label)
+           change = self.add_node(self.get_elements(), i, label,random.randint(100,400),random.randint(100,200))
            self.set_elements(change)
 
 
@@ -49,7 +81,7 @@ class Grafo:
 
 
    @staticmethod
-   def add_node(graph, node_id, node_label):
+   def add_node(graph, node_id, node_label, x, y):
        new_node = {
            "id": str(node_id),
            "type": "default",
@@ -58,7 +90,7 @@ class Grafo:
                      "text-shadow": "4px 4px 2px rgba(0,0,0,0.3)",
                      "font-size": "30px", "border-radius": "50%"},
            "data": {"label": node_label},
-           "position": {"x": random.randint(100,400), "y": random.randint(100,200)},
+           "position": {"x": x, "y": y},
            "linkedTo": []
        }
        graph.append(new_node)
@@ -71,23 +103,46 @@ class Grafo:
    def add_edge(graph, elemento_origen, elemento_destino, animated, peso):
        graph.append({'id': f'edge-{elemento_origen["id"]}-{elemento_destino["id"]}',
                         'source': f'{elemento_origen["id"]}', 'target': f'{elemento_destino["id"]}',
-                        'animated': animated})
+                        'animated': animated, 'style': {'stroke': 'white'}})
        if animated:
            for element in graph:
                if str(element["id"]) == str(elemento_origen["id"]):
                    element["linkedTo"].append({'nodeId': f'{(elemento_destino["id"])}', 'weight': f'{peso}'})
-
-
        return graph
 
 
-   @staticmethod
-   def delete_edge(graph, source_id, target_id):
+   def delete_conetion(self, elementos, source_id, target_id, origen, destino):
+       for element in elementos:
+           if str(element['id']) == f'edge-{source_id}-{target_id}':
+               break
+           if str(element['id']) == f'edge-{target_id}-{source_id}':
+               if not element['animated']:
+                   aux = source_id
+                   source_id = target_id
+                   target_id = aux
+                   break
+
+
        # Función para eliminar una conexión entre nodos en el grafo
-       # Código de la función ...
+       updated_elements = [element for element in elementos
+                           if not ('source' in element and 'target' in element
+                                   and str(element.get('source', 0)) == source_id
+                                   and str(element.get('target', 0)) == target_id)]
+       for element in updated_elements:
+           element_id = self.get_element_id(element)
+           if not element_id.startswith('edge'):
+               if str(element_id) == source_id:
+                   element['linkedTo'] = [link for link in element.get('linkedTo', []) if
+                                          link.get('nodeId') != target_id]
 
 
-       return graph
+       if len(updated_elements) < len(elementos):
+           st.success(f"Conexión de '{origen}' a '{destino}' eliminada correctamente")
+           self.set_elements(updated_elements)
+       else:
+           st.warning("No se encontró la conexión para eliminar")
+
+
 
 
    @staticmethod
@@ -156,6 +211,8 @@ class Grafo:
        self.set_elements(create_elements_from_list(self.get_elements()))
        flow_styles = {"height": 500, "width": 800}
        react_flow("graph", elements=self.get_elements(), flow_styles=flow_styles)
+
+
 
 
 

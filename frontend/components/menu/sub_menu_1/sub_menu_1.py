@@ -6,6 +6,7 @@ from backend.models.graph import Grafo
 from backend.generators import json_elements
 from backend.generators import graph_generator
 from backend.generators.graph_detector import *
+from backend.generators import graph_probability
 
 
 Elements = Grafo()
@@ -81,7 +82,7 @@ def edit_menu():
            elif selected_option == "Deshacer":
               Elements.set_elements(Elements.undo_last_change(Elements.get_elements()))
    else:
-       st.subheader("Selecciona un archivo a editar, o crea un grafo")
+       st.warning("Selecciona un archivo a editar, o crea un grafo")
 
 
 def graph_detector_menu():
@@ -100,20 +101,17 @@ def graph_detector_menu():
    elements = Elements.get_elements()
    conexiones = grafo_formateado(elements)
    if selected_option == "Determinar componentes si el grafo es bipartito":
+       st.subheader("Determinar si el grafo es bipartito")
        componentes_conexas_bipartito(conexiones)
    if selected_option == "Evaluar combinación con la mínima perdida de peso":
        componentes_conexas_bipartito(conexiones)
        min_edge_removal_cost_bipartite_subgraphs(elements)
    if selected_option == "Dividir sistema con menor diferencia de información":
-       sistema_original = {
-           'A': [0, 1, 0, 1, 0, 1, 0, 1],
-           'B': [0, 0, 1, 1, 0, 0, 1, 1],
-           'C': [0, 0, 0, 0, 1, 1, 1, 1]
-       }
-
-
-       mejor_division = encontrar_division_optima(sistema_original)
-       print("División óptima:", mejor_division)
+       st.subheader("Dividir sistema con menor diferencia de información")
+       options = ["Estrategia 1", "Estrategia 2"]
+       selected_option2 = st.sidebar.selectbox("Opciones de solución", options)
+       if selected_option2 == "Estrategia 1":
+           sub_menu_2.strategy_1_menu()
 
 
 def execute_menu(elements):
@@ -164,6 +162,8 @@ def help_menu(elements):
 
   # Mostrar mensaje dependiendo de la opción seleccionada
   st.write(f"Seleccionaste la opción de ayuda: {selected_option}")
+
+
 
 
 
