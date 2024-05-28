@@ -1,7 +1,0 @@
-
-Œpython:S2208"GImport only needed names or import the module and then use its members.(¦Şáß8Ã©Õ§å1J$f5b05574-3195-4675-94bb-54202fd6bcaf
-python:S3776"TRefactor this function to reduce its Cognitive Complexity from 39 to the 15 allowed.(¾‡šÃúÿÿÿÿ8Ä©Õ§å1J$32f00f8a-318d-42d2-a181-b66e8b90a9b9
-Špython:S3457"EAdd replacement fields or use a normal string instead of an f-string.(šÜÕ™8Å©Õ§å1J$91604169-c60f-4bd4-8066-99e8f3bc4e3f
-§python:S117B"^Rename this local variable "nombreArchivo" to match the regular expression ^[_a-z][a-z0-9_]*$.(áÎçûÿÿÿÿ8Ç©Õ§å1J$85bb1680-1cb3-4d77-81cc-7f2ab4176fa0
-’python:S1854i"MRemove this assignment to local variable 'opciones'; the value is never used.(ø¥Ó×8É©Õ§å1J$ae03078a-00d6-4aed-8938-adbc2b309916
-python:S3776G"TRefactor this function to reduce its Cognitive Complexity from 28 to the 15 allowed.(Ú€á¼úÿÿÿÿ8É©Õ§å1J$c0701fd6-3fbb-4f37-aa4e-a5502cb76b63

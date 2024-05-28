@@ -1,0 +1,6 @@
+﻿.idea
+frontend/components/menu/__pycache__
+frontend/components/menu/sub_menu_1/__pycache__
+frontend/components/menu/sub_menu_1/sub_menu_2/__pycache__
+backend/models/__pycache__
+backend/generators/__pycache__
