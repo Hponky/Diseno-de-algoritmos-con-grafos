@@ -193,7 +193,6 @@ def componentes_conexas_bipartito(grafo):
     g = Grafo()
     # Se inicializa el grafo
     graph = []
-    print(grafo, "grafoooo")
     # Se definen las componentes del grafo
     componentes_conexas = definir_componentes(grafo)
 

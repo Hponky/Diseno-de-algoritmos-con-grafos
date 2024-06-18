@@ -1,30 +1,24 @@
 import uuid
 import pandas as pd
 import streamlit as st
-import timeit
-import time
-import matplotlib.pyplot as plt
 import numpy as np
 import re
-import queue
+import math
 
 from scipy.stats import wasserstein_distance
 from streamlit_react_flow import react_flow
-from queue import PriorityQueue
-from itertools import combinations, chain
 from backend.models.graph import Grafo
-from frontend.components.menu.sub_menu_1.sub_menu_2 import sub_menu_2
 
-probabilities = [
-    [1, 0, 0, 0, 0, 0, 0, 0],
-    [0, 0, 0, 0, 1, 0, 0, 0],
-    [0, 0, 0, 0, 0, 1, 0, 0],
-    [0, 1, 0, 0, 0, 0, 0, 0],
-    [0, 1, 0, 0, 0, 0, 0, 0],
-    [0, 0, 0, 0, 0, 0, 0, 1],
-    [0, 0, 0, 0, 0, 1, 0, 0],
-    [0, 0, 0, 1, 0, 0, 0, 0],
-]
+'''probabilities = [
+                [1, 0, 0, 0, 0, 0, 0, 0],
+                [0, 0, 0, 0, 1, 0, 0, 0],
+                [0, 0, 0, 0, 0, 1, 0, 0],
+                [0, 1, 0, 0, 0, 0, 0, 0],
+                [0, 1, 0, 0, 0, 0, 0, 0],
+                [0, 0, 0, 0, 0, 0, 0, 1],
+                [0, 0, 0, 0, 0, 1, 0, 0],
+                [0, 0, 0, 1, 0, 0, 0, 0],
+            ]'''
 
 states = [
     [0, 0, 0],
@@ -38,6 +32,25 @@ states = [
 ]
 
 graph = []
+
+def generar_matriz_binaria(m, n):
+    # Calcular la longitud fija de los números binarios
+    l = math.ceil(math.log2(m))
+
+    # Generar la matriz de números binarios
+    matriz_binaria = []
+    for i in range(m):
+        # Convertir el índice actual a binario y rellenar con ceros a la izquierda
+        binario = bin(i)[2:].zfill(l)
+        # Invertir el orden de los dígitos binarios
+        binario_inverso = binario[::-1]
+        # Convertir cada caracter en un entero y agregar a la fila
+        fila = [int(b) for b in binario_inverso[:n]]
+        matriz_binaria.append(fila)
+
+    return matriz_binaria
+
+#states = generar_matriz_binaria(probabilities, probabilities[0])
 
 
 
@@ -61,44 +74,48 @@ def restablecer_matriz():
         st.success("Se restableció la matriz original")
 
 def mostrar_tabla(matriz):
-    columns = []
-    index = []
-    for i in range(len(matriz)):
-        columns.append(f'F{i}')
-        index.append(f'C{i}')
+    # Crear nombres de columnas e índices adecuados
+    columns = [f'F{j}' for j in range(len(matriz[0]))]
+    index = [f'C{i}' for i in range(len(matriz))]
+
     # Redondear los elementos de la matriz a dos decimales
     matriz_redondeada = [[round(valor, 2) for valor in fila] for fila in matriz]
 
+    # Crear el DataFrame con los nombres de columnas e índices adecuados
     df = pd.DataFrame(matriz_redondeada, columns=columns, index=index)
+
+    # Mostrar la tabla en Streamlit con formato adecuado
     st.table(df.style.format("{:.2f}"))
 
+
+def generar_matriz_binaria(m, n):
+    # Calcular la longitud fija de los números binarios
+    l = math.ceil(math.log2(m))
+
+    # Generar la matriz de números binarios
+    matriz_binaria = []
+    for i in range(m):
+        # Convertir el índice actual a binario y rellenar con ceros a la izquierda
+        binario = bin(i)[2:].zfill(l)
+        # Invertir el orden de los dígitos binarios
+        binario_inverso = binario[::-1]
+        # Convertir cada caracter en un entero y agregar a la fila
+        fila = [int(b) for b in binario_inverso[:n]]
+        matriz_binaria.append(fila)
+
+    return matriz_binaria
 def trabajar_sistema():
     global probabilities
-    global states
     string = st.text_input("Introduce el sistema a trabajar:")
-    execution_time = 0
+
     if st.button("Empezar"):
-        # Llamada a la función y almacenamiento de los resultados
-        fu_states, pr_states, iState = parse_input_string(string)
-
-        def branch_and_bound_example():
-            indices_minimos, minimos_valores = branch_and_bound(list(pr_states), list(fu_states), probabilities, states,
-                                                                iState)
-
-        # Medir el tiempo de inicio
-        start_time = time.time()
-
-        # Llamar a la función cuya duración quieres medir
-        branch_and_bound_example()
-
-        # Medir el tiempo de finalización
-        end_time = time.time()
-
-        # Calcular el tiempo total de ejecución
-        execution_time = end_time - start_time
-        st.success(f"El tiempo de ejecución de branch_and_bound_example fue de {execution_time:.4f} segundos.")
-    else:
+        eliminar_grafo()  # Clear the existing graph
         crear_grafo()
+        print(f"{len(probabilities), len(probabilities[0])}")
+
+        # Llamada a la función y almacenamiento de los resultados
+        ns, cs, cs_value = parse_input_string(string)
+        decomposition(ns, cs, cs_value)
 
 def editar_matriz():
     global probabilities
@@ -134,19 +151,11 @@ def editar_matriz():
         else:
             st.warning("Recuerde que el valor debe estar entre 0 y 1")
 
-def generate_combinations(present_states, future_states):
-    return [(present_state, future_state) for i in range(len(present_states) + 1) for present_state in combinations(present_states, i)
-            for j in range(len(future_states) + 1) for future_state in combinations(future_states, j)
-            if not (present_state == future_state and present_state != ()) and not (present_state == () and future_state == ()) and not (present_state == tuple(present_states) and future_state == tuple(future_states))]
-
-def generate_remaining_states(combinations_list, complete_present_state, complete_future_state):
-    return [(tuple(sorted(set(complete_present_state) - set(present_state))), tuple(sorted(set(complete_future_state) - set(future_state))))
-            for present_state, future_state in combinations_list]
-
 def getIndicesToMargenalice(states, state):
     availableIndices = []
     indices = {}
     csValue = ""
+
     for i in range(len(state)):
         if state[i] != None:
             availableIndices.append(i)
@@ -158,13 +167,16 @@ def getIndicesToMargenalice(states, state):
             key += str(states[i][availableIndices[j]])
 
         indices[key] = indices.get(key) + [i] if indices.get(key) else [i]
-    if not csValue:
-        return indices, 0
+
+    if csValue == "":
+      return indices, 0
+
     return indices, int(csValue, 2)
 
 def margenaliceNextState(nsIndices, probabilites):
     nsTransitionTable = [[None] * len(nsIndices) for i in range(len(probabilites))]
     currentColumn = 0
+    print(f"esto es nsIndices: {len(nsIndices)}")
     for indices in nsIndices.values():
         for i in range(len(nsTransitionTable)):
             probability = 0
@@ -195,54 +207,131 @@ def margenaliceCurrentState(csIndices, nsTransitionTable):
 
     return csTransitionTable
 
-def probabilityTransitionTable(probabilities, states, currentState, nextState):
-    nsIndices, _ = getIndicesToMargenalice(states, nextState)
-    #print(nsIndices)
-    csIndices, csValue = getIndicesToMargenalice(states, currentState)
-    #print(csIndices, csValue)
-    nsTransitionTable = margenaliceNextState(nsIndices, probabilities)
-    csTransitionTable = margenaliceCurrentState(csIndices, nsTransitionTable)
+def probabilityTransitionTable(currentState, nextState, probabilities):
+    result = []
+    csTransitionTable = []
+    csIndices, csValueIndex = getIndicesToMargenalice(states, currentState)
+    missingCs = any(state is None for state in currentState)
 
-    return csTransitionTable[csValue]
+    if (missingCs):
+      for i, state in enumerate(nextState):
+        if state is not None:
+          newNs = [None] * len(nextState)
+          newNs[i] = nextState[i]
+
+          nsIndices, _ = getIndicesToMargenalice(states, newNs)
+          nsTransitionTable = margenaliceNextState(nsIndices, probabilities)
+          csTransitionTable = margenaliceCurrentState(csIndices, nsTransitionTable)
+          csValue = csTransitionTable[csValueIndex]
+
+          if len(result) > 0:
+            result = np.kron(result, csValue)
+          else:
+            result = csValue
+
+      #result = reorder_cross_product(result)
+
+
+    else:
+      nsIndices, _ = getIndicesToMargenalice(states, nextState)
+      nsTransitionTable = margenaliceNextState(nsIndices, probabilities)
+
+      csTransitionTable = margenaliceCurrentState(csIndices, nsTransitionTable)
+      result = csTransitionTable[csValueIndex]
+
+
+    return result
 
 def functionTensor(dividedSystem1, dividedSystem2):
     dividedSystem = np.outer(dividedSystem1, dividedSystem2)
     return dividedSystem
 
+def decomposition(ns, cs, cs_value):
 
-def calc_emd(original_distribution, divided_distribution):
-    # Convertimos las distribuciones en arrays de numpy
-    original_array = np.array(original_distribution)
-    divided_array = np.array(divided_distribution)
+    min_emd = None
+    best_partitioned_system = None
+    best_ns1 = None
+    best_cs1 = None
+    best_ns2 = None
+    best_cs2 = None
 
-    # Calculamos el EMD usando la función wasserstein_distance de scipy
-    emd = wasserstein_distance(np.arange(len(original_array)), np.arange(len(divided_array)), original_array,
-                               divided_array)
-    emd /= 2
-    emd = round(emd,2)
-    return emd
+    def replace_if_empty(s):
+        return 'Ø' if len(s) == 0 else s
+    print(f"sistema original: {cs_to_array(cs, cs_value), ns_to_array(ns), probabilities}")
+    original_system = probabilityTransitionTable(cs_to_array(cs, cs_value), ns_to_array(ns), probabilities)
+    memory = {}
+    impresos = set()
 
-def translate_systems(system_tuple, initialState):
-    results = []
-    letters = []
-    primera = 'A'
-    for i in range(cantidad_nodos()):
-        letters.append(primera)
-        primera = siguiente_letra_mayuscula(primera)
+    def descomponer(ns, cs, memory):
+        if memory.get(cs) is not None and memory.get(cs).get(ns) is not None:
+            if any(memory.get(cs).get(ns)):
+                return memory.get(cs).get(ns)
 
-    letters_to_check = letters
+        if len(ns) == 1:
+            value = probabilityTransitionTable(cs_to_array(cs, cs_value), ns_to_array(ns), probabilities)
+            return value
 
-    for i, tuple_item in enumerate(system_tuple):
+        value = []
+        for i in range(0, len(ns)):
+            if len(value) > 0:
+                cross_product = np.kron(value, descomponer(ns[i], cs, memory))
+                value = reorder_cross_product(cross_product)
+            else:
+                value = np.array(descomponer(ns[i], cs, memory))
 
-        result_tuple = [0 if letter in tuple_item else None for letter in letters_to_check]
+                if memory.get(cs) is None:
+                    memory[cs] = {}
 
-        if i % 2 == 0:
-            for index, initial in enumerate(initialState):
-                if initial == 1 and letters_to_check[index] in tuple_item:
-                    result_tuple[index] = 1
+                memory[cs][ns[i]] = value
+        return value
 
-        results.append(tuple(result_tuple))
-    return results
+    for lenNs in range(len(ns) + 1):
+        for i in range(len(ns) - lenNs + 1):
+            j = i + lenNs - 1
+            ns1, ns2 = ns[i:j+1], ns[:i] + ns[j+1:]
+
+            for lenCs in range(len(cs) + 1):
+                for x in range(len(cs) - lenCs + 1):
+                    z = x + lenCs - 1
+                    cs1, cs2 = cs[x:z+1], cs[:x] + cs[z+1:]
+
+                    if ns2 == ns and cs2 == cs:
+                        continue
+
+                    # Verificar duplicados
+                    combinacion_actual = ((ns1, cs1), (ns2, cs2))
+                    combinacion_inversa = ((ns2, cs2), (ns1, cs1))
+
+                    if (combinacion_actual not in impresos and combinacion_inversa not in impresos) or (ns1 == ns and ns2 == "" and cs1 == "" and cs2 == ""):
+                        arr1 = np.array(descomponer(ns2, cs2, memory))
+                        arr2 = np.array(descomponer(ns1, cs1, memory))
+
+                        partitioned_system = []
+
+                        if len(arr1) > 0 and len(arr2) > 0:
+                            cross_product = np.kron(arr1, arr2)
+                            partitioned_system = reorder_cross_product(cross_product)
+                        elif len(arr1) > 0:
+                            partitioned_system = arr1
+                        elif len(arr2) > 0:
+                            partitioned_system = arr2
+
+                        # Calcular la Distancia de Wasserstein (EMD)
+                        emd_distance = wasserstein_distance(original_system, partitioned_system)
+
+                        if min_emd is None or emd_distance < min_emd:
+                            min_emd = emd_distance
+                            best_partitioned_system = partitioned_system
+                            best_ns1, best_cs1, best_ns2, best_cs2 = ns1, cs1, ns2, cs2
+
+                        impresos.add(combinacion_actual)
+                        impresos.add(combinacion_inversa)
+
+    # Imprimir y graficar la mejor combinación encontrada
+    if best_partitioned_system is not None:
+        st.success(f"El mejor EMD encontrado es: {min_emd}")
+        st.success(f"Mejor combinación: p({replace_if_empty(best_ns2)}ᵗ⁺¹ | {replace_if_empty(best_cs2)}ᵗ) × p({replace_if_empty(best_ns1)}ᵗ⁺¹ | {replace_if_empty(best_cs1)}ᵗ)")
+        cambiar_grafo(list(cs), list(ns), cs_value, f"{replace_if_empty(best_ns2)} | {replace_if_empty(best_cs2)}", f"{replace_if_empty(best_ns1)} | {replace_if_empty(best_cs1)}")
 
 def parse_input_string(input_string):
     # Extraer present_states, future_states e iState de la cadena
@@ -251,62 +340,34 @@ def parse_input_string(input_string):
     if not match:
         raise ValueError("Formato de cadena no válido")
 
-    pr_states = tuple(match.group(1))
-    fu_states = tuple(match.group(2))
+    pr_states = match.group(1)
+    fu_states = match.group(2)
     iState = [int(digit) for digit in match.group(3)]
-
     return pr_states, fu_states, iState
 
-def branch_and_bound(present_states, future_states, probabilities, states, initial_state):
-    if len(present_states) > len(initial_state):
-        st.warning('Asegurese de ingresar correctamente el sistema a trabajar')
-        return [],[]
-    else:
-        combinations = generate_combinations(present_states, future_states)
-        remaining_states = generate_remaining_states(combinations, present_states, future_states)
-        translated_combinations = [translate_systems(combination, initial_state) for combination in combinations]
-        translated_remaining = [translate_systems(complement, initial_state) for complement in remaining_states]
+def reorder_cross_product(cross_product):
+  len_cross = len(cross_product)
 
-        current_states_combinations, future_states_combinations = zip(*translated_combinations)
-        current_states_remaining, future_states_remaining = zip(*translated_remaining)
+  if (len_cross == 4):
+    new_order = [0, 2, 1, 3]
+    return cross_product[new_order]
 
-        combined_states = (present_states, future_states)
-        translated_states = translate_systems(combined_states, initial_state)
+  elif (len_cross == 8):
+    new_order = [0, 1, 2, 3, 4, 6, 5, 7]
+    return cross_product[new_order]
 
-        result_combination = [probabilityTransitionTable(probabilities, states, list(current), list(next_state))
-                              for current, next_state in zip(current_states_combinations, future_states_combinations)]
+  return cross_product
 
-        result_complement = [probabilityTransitionTable(probabilities, states, list(current), list(next_state))
-                             for current, next_state in zip(current_states_remaining, future_states_remaining)]
+def ns_to_array(letras):
+    ns_arr = [0] * len(letras)
+    print(f"esto es ns to array {ns_arr} y tambien letras len: {len(letras)} y letras: {letras}")
+    return ns_arr
 
-        divided_distribution = [functionTensor(combination_result, complement_result)
-                                for combination_result, complement_result in zip(result_combination, result_complement)]
+def cs_to_array(cs, cs_value):
+    # Crear un nuevo arreglo con None en las posiciones especificadas por cs
+    cs_arr = [cs_value[i] if chr(65 + i) in cs else None for i in range(len(cs_value))]
 
-        original_distribution = probabilityTransitionTable(probabilities, states, translated_states[0], translated_states[1])
-
-        # Verificar si divided_distribution está vacío
-        if not divided_distribution:
-            print("No hay distribuciones divididas para analizar.")
-            return None, None
-
-        # Ordenar divided_distribution por cota inferior ascendente
-        divided_distribution = sorted(divided_distribution, key=lambda dist: calculate_lower_bound(original_distribution, dist))
-
-        minimum_value, minimum_index = branch_and_bound_helper(original_distribution, divided_distribution)
-
-        if minimum_index is not None:
-            # Invertir el orden de las letras en cada subsistema y ordenar alfabéticamente
-            inverted_comb = " | ".join("".join(sorted(c)) if c and c != ('',) else 'Ø' for c in combinations[minimum_index][::-1])
-            inverted_comb_comp = " | ".join("".join(sorted(c)) if c and c != ('',) else 'Ø' for c in remaining_states[minimum_index][::-1])
-
-            # Reemplazar el primer ' | ' por 'Ø | ' si el primer subsistema es vacío
-            inverted_comb = inverted_comb.replace(' | ', 'Ø | ', 1) if inverted_comb.startswith(' | ') else inverted_comb
-            inverted_comb_comp = inverted_comb_comp.replace(' | ', 'Ø | ', 1) if inverted_comb_comp.startswith(' | ') else inverted_comb_comp
-
-            # Imprimir la información con el nuevo formato
-            st.success(f"El mínimo valor es: {minimum_value}, y estos subsistemas cumplen con ello: {inverted_comb} y {inverted_comb_comp}.")
-            cambiar_grafo(present_states,future_states,initial_state,inverted_comb,inverted_comb_comp)
-        return minimum_index, minimum_value
+    return cs_arr
 
 def colear_nodos_gris(element):
     element['style'] = {
@@ -397,7 +458,7 @@ def cambiar_nodos(presentes, futuros, inicial):
                 colear_nodos_gris(element)
                 if element['data']['label'].endswith("'"):
                     if element['data']['label'][0] in futuros:
-                        element['style']['box-shadow'] = "-2px 10px 100px 3px rgba(0, 0, 255, 0.5)"
+                        element['style']['box-shadow'] = "-2px 10px 80px 10px rgba(0, 0, 255, 1)"
             else:
                 sum = 0
                 for presente in presentes:
@@ -405,7 +466,7 @@ def cambiar_nodos(presentes, futuros, inicial):
                         if inicial[sum] == 1:
                             colorear_nodos_amarillo(element)
                     sum += 1
-                element['style']['box-shadow'] = "-2px 10px 100px 3px rgba(255, 0, 0, 0.5)"
+                element['style']['box-shadow'] = "-2px 10px 80px 10px rgba(255, 0, 0, 1)"
             aux = element['linkedTo']
             element['linkedTo'] = []
             grafo.append(element)
@@ -431,6 +492,9 @@ def aristas_cortadas(presentes, futuros, grafo):
                     element = get_element_by_id(grafo,f"edge-{origen['id']}-{destino['id']}")
                     element['style'] = {'stroke': 'red'}
 
+#Esto recibe de entrada de datos, ejemplo:
+#presentes, futuros, inicial, resultado1, resultado2
+#['A', 'B', 'C'], ['A', 'B', 'C'], [1, 0, 0], A | Ø, BC | ABC
 def cambiar_grafo(presentes, futuros, inicial, resultado1, resultado2):
     grafo = cambiar_nodos(presentes,futuros, inicial)
     cambiar_aristas(resultado1, resultado2, grafo)
@@ -438,71 +502,6 @@ def cambiar_grafo(presentes, futuros, inicial, resultado1, resultado2):
 
     flow_styles = {"height": 500, "width": 800}
     react_flow("graph", elements=grafo, flow_styles=flow_styles)
-
-
-def calculate_lower_bound(original_distribution, divided_dist):
-    # Convertir a arreglos de NumPy
-    original_distribution = np.array(original_distribution)
-    divided_dist = np.array(divided_dist)
-
-    # Aplanar las distribuciones para asegurar formas compatibles
-    original_distribution = original_distribution.flatten()
-    divided_dist = divided_dist.flatten()
-
-    # Calcular la diferencia absoluta máxima elemento a elemento
-    max_diff = np.max(np.abs(original_distribution - divided_dist))
-    return max_diff
-
-def branch_and_bound_helper(original_distribution, divided_distribution):
-    minimum_value = float('inf')
-    minimum_index = -1
-
-    def calculate_upper_bound(original_distribution, divided_dist):
-        original_distribution = np.array(original_distribution)
-        divided_dist = np.array(divided_dist)
-
-        original_distribution = original_distribution.flatten()
-        divided_dist = divided_dist.flatten()
-
-        max_diff = np.max(np.abs(original_distribution - divided_dist))
-
-        return max_diff
-
-    def branch_and_bound_helper(original_distribution, divided_distribution):
-        minimum_value = float('inf')
-        minimum_index = -1
-
-    def branch(distributions, original_distribution_copy, current_index, current_emd):
-        nonlocal minimum_value, minimum_index
-
-        if current_index == len(distributions):
-            return
-
-        distribution = distributions[current_index]
-        result_emd = calc_emd(original_distribution_copy, distribution)
-
-        # Actualizar el mínimo si encontramos una menor diferencia
-        if result_emd < minimum_value:
-            minimum_value = result_emd
-            minimum_index = current_index
-
-        # Podar si ya encontramos una diferencia de 0
-        if result_emd == 0:
-            return
-
-        upper_bound = calculate_upper_bound(original_distribution_copy, distributions[current_index])
-
-        # Podar si el límite superior es mayor que el mínimo actual
-        if upper_bound < minimum_value:
-            return
-
-        branch(distributions, original_distribution_copy, current_index + 1, upper_bound)
-
-    distributions = [divided_dist.flatten().tolist() for divided_dist in divided_distribution]
-    original_distribution_copy = np.copy(original_distribution)
-    branch(distributions, original_distribution_copy, 0, 0)
-
-    return minimum_value, minimum_index
 
 def siguiente_letra_mayuscula(letra):
     if (letra == 'Z'):
@@ -552,5 +551,7 @@ def crear_grafo():
     global graph
     agregar_nodos()
     agregar_conexiones()
-    flow_styles = {"height": 8000, "width": 800}
-    react_flow("graph", elements=graph, flow_styles=flow_styles)
+
+def eliminar_grafo():
+    global graph
+    graph = []
