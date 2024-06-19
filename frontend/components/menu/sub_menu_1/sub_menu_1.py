@@ -108,10 +108,12 @@ def graph_detector_menu():
        min_edge_removal_cost_bipartite_subgraphs(elements)
    if selected_option == "Dividir sistema con menor diferencia de información":
        st.subheader("Dividir sistema con menor diferencia de información")
-       options = ["Estrategia 1", "Estrategia 2"]
+       options = ["Estrategia 1", "Estrategia 2", "Estrategia 3"]
        selected_option2 = st.sidebar.selectbox("Opciones de solución", options)
        if selected_option2 == "Estrategia 1":
            sub_menu_2.strategy_1_menu()
+       if selected_option2 == "Estrategia 3":
+           sub_menu_2.strategy_3_menu()
 
 
 def execute_menu(elements):

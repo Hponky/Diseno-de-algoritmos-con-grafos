@@ -9,7 +9,7 @@ from scipy.stats import wasserstein_distance
 from streamlit_react_flow import react_flow
 from backend.models.graph import Grafo
 
-'''probabilities = [
+probabilities = [
                 [1, 0, 0, 0, 0, 0, 0, 0],
                 [0, 0, 0, 0, 1, 0, 0, 0],
                 [0, 0, 0, 0, 0, 1, 0, 0],
@@ -18,7 +18,7 @@ from backend.models.graph import Grafo
                 [0, 0, 0, 0, 0, 0, 0, 1],
                 [0, 0, 0, 0, 0, 1, 0, 0],
                 [0, 0, 0, 1, 0, 0, 0, 0],
-            ]'''
+            ]
 
 states = [
     [0, 0, 0],
@@ -241,10 +241,6 @@ def probabilityTransitionTable(currentState, nextState, probabilities):
 
 
     return result
-
-def functionTensor(dividedSystem1, dividedSystem2):
-    dividedSystem = np.outer(dividedSystem1, dividedSystem2)
-    return dividedSystem
 
 def decomposition(ns, cs, cs_value):
 

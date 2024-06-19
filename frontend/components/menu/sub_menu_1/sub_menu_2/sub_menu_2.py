@@ -1,19 +1,30 @@
-import random
-import pandas as pd
-
-
+from backend.generators.estrategia_propia import matriz_sistema_original, presente_vacio, convertir_y_cambiar
 from .sub_menu_3.sub_menu_3 import *
 from backend.utils import file_json
-from backend.generators import json_elements
-from backend.models.graph import Grafo
-from backend.generators import graph_generator
-from streamlit_react_flow import react_flow
+from backend.generators import graph_generator, estrategia_propia
 from backend.generators import graph_probability
-
+from itertools import product
+import streamlit as st
+from backend.models.graph import Grafo
+from itertools import combinations
 
 Elements = Grafo()
 clicks = 0
 
+def procesar_entrada(entrada, matriz_probabilidad):
+
+    for conjunto in entrada:
+        for vector in conjunto:
+            # Convertir cada vector en una cadena para usarla como índice
+            index = int("".join(map(str, vector)), 2)
+            # Determinar la fila y columna donde debe ir el "1"
+            fila = index // 32
+            columna = index % 32
+            # Colocar el "1" en la posición correspondiente de la matriz
+            matriz_probabilidad[fila][columna] = 1
+
+def crear_matriz_cero(n):
+    return [[0 for _ in range(n)] for _ in range(n)]
 
 def strategy_1_menu():
    st.subheader('Estrategia 1')
@@ -41,10 +52,201 @@ def strategy_1_menu():
    if selected_option == 'Ingresar Sistema a Trabajar':
        graph_probability.trabajar_sistema()
 
+def string_a_lista_de_listas(string):
+    lista = []
+    l = []
+    for i, j in enumerate(string):  # Corregimos el uso de enumerate
+        if i != 0 and i != len(string)-1:
+            if j == '[':
+                for ii, jj in enumerate(string):  # Corregimos el uso de enumerate
+                    if ii > i:  # Corregimos la lógica de comparación
+                        if jj == ']':
+                            break
+                        if jj.isdigit() or jj.replace('.', '').isdigit():  # Corregimos la verificación numérica
+                            l.append(float(jj))  # Convertimos a float en lugar de int para manejar decimales
+                lista.append(l)
+                l = []  # Reiniciamos la lista interna para la próxima sublista
+
+    return lista
 
 
+def trabajar_sistema(dic1, dic2):
+    global probabilities
+    global matrices
+    print(dic1,f'\n{dic2}')
+    string = st.text_input("Introduce el sistema a trabajar:")
+    execution_time = 0
+    if st.button("Empezar"):
+        empezar_trabajo(string, execution_time,dic1)
+    else:
+        graph_probability.crear_grafo()
 
+def generate_combinations(present_states, future_states):
+    return [
+        (present_state, future_state)
+        for i in range(len(present_states) + 1)
+        for present_state in combinations(present_states, i)
+        for j in range(len(future_states) + 1)
+        for future_state in combinations(future_states, j)
+        if not (present_state == future_state and present_state != ())
+           and not (present_state == () and future_state == ())
+           and not (present_state == tuple(present_states) and future_state == tuple(future_states))
+    ]
 
+def empezar_trabajo(string, execution_time, dic1):
+    global states
+    estados = []
+    pr_states, fu_states, iState = graph_probability.parse_input_string(string)
+    presentes, futuros = sistema_original(fu_states, pr_states)
+    if len(iState) == len(presentes):
+        combinations = generate_combinations(pr_states, fu_states)
+        primera = 'A'
+        for i in range(len(matrices)):
+            estados.append(primera)
+            primera = graph_probability.siguiente_letra_mayuscula(primera)
+        matriz = matriz_sistema_original(dic1,pr_states, fu_states, futuros, presentes)
+        print(futuros, presentes, iState)
+        # Recorrer cada elemento de la lista
+        for elemento in combinations:
+            futuro, presente = elemento
+            # Validar si el presente elemento es ()
+            if presente == () and len(futuro) == 1:
+                presente_vacio(elemento, futuro, futuros, dic1, iState, combinations)
+            # Validar si el futuro elemento es ()
+            if futuro == () and len(presente) == 1:
+                print(elemento)
+                valor = [1]
+                print(valor)
+                letra = presente[0]
+                indice = presentes[letra]
+                complemento = combinations[int(len(combinations)-(indice+1))]
+                presentes2 = complemento[1]
+                aux = {}
+                print('presentes: ', presentes, presentes2)
+                new_states = convertir_y_cambiar(states)
+                for i in range(len(new_states)):
+                    l = []
+                    for clave, valor in presentes.items():
+                        if clave in presentes2:
+                            for j in range(len(new_states[i])):
+                                if j == valor:
+                                    l.append(new_states[i][j])
+                            aux[i] = l
+                print(aux)
+                pot = 0
+                i = 0
+                for estado in iState:
+                    if estado == 1:
+                        pot += sub_menu_2.pot(i)
+                    i+=1
+
+def sistema_original(fu_states, pr_states):
+    fu, pr = crear_diccionarios(fu_states, pr_states)
+    return pr, fu
+
+def crear_dict_pr(pr_states):
+    primera = 'A'
+    pr = {}
+    j = 0
+
+    while (len(pr_states) != len(pr)):
+        if primera in pr_states:
+            pr[primera] = j
+        j += 1
+        primera = graph_probability.siguiente_letra_mayuscula(primera)
+
+    return pr
+
+def crear_dict_fu(fu_states):
+    primera = 'A'
+    fu = {}
+    j = 0
+
+    while (len(fu_states) != len(fu)):
+        if primera in fu_states:
+            fu[primera] = j
+        j += 1
+        primera = graph_probability.siguiente_letra_mayuscula(primera)
+
+    return fu
+
+def crear_diccionarios(fu_states, pr_states):
+    return crear_dict_pr(pr_states), crear_dict_fu(fu_states)
+
+def strategy_3_menu():
+    st.subheader('Estrategia 3')
+
+    options = ['Editar la Matriz de Probabilidades', 'Volver a la Matriz Original', 'Ingresar Sistema a Trabajar']
+    selected_option = st.sidebar.selectbox('Opciones:', options, index=2)
+
+    if selected_option == 'Editar la Matriz de Probabilidades':
+        st.write("Editar Matriz de Probabilidades")
+        graph_probability.editar_matriz()
+
+    if selected_option == 'Volver a la Matriz Original':
+        st.write("Volver a la Matriz Original")
+        graph_probability.restablecer_matriz()
+
+    st.write('Ingrese las matrices en el siguiente formato: ')
+    st.write('[\n[0, 0, 0, 0, 1],\n[1, 0, 0, 1, 0],\n[0, 1, 0, 1, 0],\n[1, 1, 0, 0, 1],\n[0, 0, 1, 1, 0],'
+             '\n[1, 0, 1, 0, 1],\n[0, 1, 1, 0, 1],\n[1, 1, 1, 1, 0],]')
+    primera = 'A'
+    cant = st.number_input('Ingrese la cantidad de nodos', min_value=1, value=1)
+    dimension = pot(cant)
+    combinaciones = generate_binary_combinations(cant)
+    graph_probability.probabilities = crear_matriz_cero(dimension)
+    graph_probability.states = combinaciones
+    graph_probability.matrices = []
+    matrices = []
+    for i in range(cant):
+        text = st.text_input(f'Ingresar matriz para {primera}:')
+        if text != '':
+            matrices.append(estrategia_propia.mostrar_tablas(text, primera))
+        primera = graph_probability.siguiente_letra_mayuscula(primera)
+
+    if selected_option == 'Ingresar Sistema a Trabajar':
+        dic1, dic2 = llenar_unos()
+        estrategia_propia.trabajar_sistema3(dic1, dic2, matrices)
+
+def validar_posicion(dic):
+    dic2 = {}
+    for clave, valor in dic.items():
+        new = 0
+        for i in range(len(valor)):
+            new += pot(i) * valor[i]
+            dic2[clave] = new
+    return dic2
+
+def llenar_unos():
+    matrices = graph_probability.matrices
+    probabilities = graph_probability.probabilities
+    dic = {}
+    for i in range(len(matrices)):
+        for j in range(len(matrices[i])):
+            dic[j] = []
+    for i in range(len(matrices)):
+        for j in range(len(matrices[i])):
+            dic[j].append(matrices[i][j][len(matrices[i][j])-1])
+    dic2 = validar_posicion(dic)
+    for clave, valor in dic.items():
+        probabilities[int(clave)][int(len(valor))] = 1
+    return dic, dic2
+
+def pot(n):
+    return 2**n
+
+def generate_binary_combinations(n):
+    """
+    Genera todas las combinaciones binarias posibles de n bits.
+
+    Args:
+    n (int): Número de bits.
+
+    Returns:
+    List[str]: Lista de combinaciones binarias en formato de cadenas.
+    """
+    combinations = [''.join(bits) for bits in product('01', repeat=n)]
+    return combinations
 
 def new_grafo_menu():
    options = ["Personalizado", "Aleatorio"]
@@ -266,7 +468,3 @@ def processes_menu():
    options = ["Proceso 1", "Proceso 2", "Proceso 3"]
    selected_option = st.sidebar.selectbox("Seleccionar proceso", options)
    st.write(f"Seleccionaste la opción de ejecución de procesos: {selected_option}")
-
-
-
-
