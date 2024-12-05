@@ -1,18 +1,14 @@
-import uuid
-import pandas as pd
 import streamlit as st
 import timeit
 import time
 import matplotlib.pyplot as plt
-import numpy as np
-import re
 import queue
 
-from scipy.stats import wasserstein_distance
 from streamlit_react_flow import react_flow
 from queue import PriorityQueue
 from itertools import combinations, chain
 from backend.models.graph import Grafo
+from backend.generators.graph_operations import *
 from frontend.components.menu.sub_menu_1.sub_menu_2 import sub_menu_2
 
 probabilities = [
@@ -39,39 +35,6 @@ states = [
 
 graph = []
 
-
-
-def restablecer_matriz():
-    original = [
-                [1, 0, 0, 0, 0, 0, 0, 0],
-                [0, 0, 0, 0, 1, 0, 0, 0],
-                [0, 0, 0, 0, 0, 1, 0, 0],
-                [0, 1, 0, 0, 0, 0, 0, 0],
-                [0, 1, 0, 0, 0, 0, 0, 0],
-                [0, 0, 0, 0, 0, 0, 0, 1],
-                [0, 0, 0, 0, 0, 1, 0, 0],
-                [0, 0, 0, 1, 0, 0, 0, 0],
-            ]
-    global probabilities
-    if probabilities != original :
-        st.warning("Se perderán los cambios actuales")
-        if st.button("Confirmar"):
-            probabilities = original
-    else:
-        st.success("Se restableció la matriz original")
-
-def mostrar_tabla(matriz):
-    columns = []
-    index = []
-    for i in range(len(matriz)):
-        columns.append(f'F{i}')
-        index.append(f'C{i}')
-    # Redondear los elementos de la matriz a dos decimales
-    matriz_redondeada = [[round(valor, 2) for valor in fila] for fila in matriz]
-
-    df = pd.DataFrame(matriz_redondeada, columns=columns, index=index)
-    st.table(df.style.format("{:.2f}"))
-
 def trabajar_sistema():
     global probabilities
     global states
@@ -82,8 +45,7 @@ def trabajar_sistema():
         fu_states, pr_states, iState = parse_input_string(string)
 
         def branch_and_bound_example():
-            indices_minimos, minimos_valores = branch_and_bound(list(pr_states), list(fu_states), probabilities, states,
-                                                                iState)
+            indices_minimos, minimos_valores = branch_and_bound(list(pr_states), list(fu_states), probabilities, states, iState)
 
         # Medir el tiempo de inicio
         start_time = time.time()
@@ -127,7 +89,6 @@ def editar_matriz():
                         else:
                             fila.append(round(elemento,2))
                     nueva_matriz.append(fila)
-                print(nueva_matriz)
                 probabilities = nueva_matriz
             else:
                 st.warning("Ingrese valores validos para las coordenadas")
@@ -209,17 +170,15 @@ def functionTensor(dividedSystem1, dividedSystem2):
     dividedSystem = np.outer(dividedSystem1, dividedSystem2)
     return dividedSystem
 
-
 def calc_emd(original_distribution, divided_distribution):
     # Convertimos las distribuciones en arrays de numpy
     original_array = np.array(original_distribution)
     divided_array = np.array(divided_distribution)
 
     # Calculamos el EMD usando la función wasserstein_distance de scipy
-    emd = wasserstein_distance(np.arange(len(original_array)), np.arange(len(divided_array)), original_array,
-                               divided_array)
+    emd = wasserstein_distance(np.arange(len(original_array)), np.arange(len(divided_array)), original_array, divided_array)
     emd /= 2
-    emd = round(emd,2)
+    emd = round(emd, 2)
     return emd
 
 def translate_systems(system_tuple, initialState):
@@ -305,7 +264,7 @@ def branch_and_bound(present_states, future_states, probabilities, states, initi
 
             # Imprimir la información con el nuevo formato
             st.success(f"El mínimo valor es: {minimum_value}, y estos subsistemas cumplen con ello: {inverted_comb} y {inverted_comb_comp}.")
-            cambiar_grafo(present_states,future_states,initial_state,inverted_comb,inverted_comb_comp)
+            cambiar_grafo(present_states, future_states, initial_state, inverted_comb, inverted_comb_comp)
         return minimum_index, minimum_value
 
 def colear_nodos_gris(element):
@@ -388,58 +347,6 @@ def cambiar_aristas(resultado1,resultado2,grafo):
                     if get_element_by_label(grafo, i) is not None and get_element_by_label(grafo, f"{j}'") is not None:
                         graph.add_edge(grafo, get_element_by_label(grafo, i), get_element_by_label(grafo, f"{j}'"), True, 0)
 
-def cambiar_nodos(presentes, futuros, inicial):
-    global graph
-    grafo = []
-    for element in graph:
-        if 'data' in element:
-            if element['data']['label'] not in presentes:
-                colear_nodos_gris(element)
-                if element['data']['label'].endswith("'"):
-                    if element['data']['label'][0] in futuros:
-                        element['style']['box-shadow'] = "-2px 10px 100px 3px rgba(0, 0, 255, 0.5)"
-            else:
-                sum = 0
-                for presente in presentes:
-                    if element['data']['label'] == presente:
-                        if inicial[sum] == 1:
-                            colorear_nodos_amarillo(element)
-                    sum += 1
-                element['style']['box-shadow'] = "-2px 10px 100px 3px rgba(255, 0, 0, 0.5)"
-            aux = element['linkedTo']
-            element['linkedTo'] = []
-            grafo.append(element)
-    return grafo
-
-def aristas_cortadas(presentes, futuros, grafo):
-    graph = Grafo()
-    for i in presentes:
-        for j in futuros:
-            if i != j:
-                counter = 0
-                origen = {}
-                destino = {}
-                for element in grafo:
-                    if 'data' in element and element['data']['label'] == i:
-                        origen = element
-                    if 'data' in element and element['data']['label'] == f"{j}'":
-                        destino = element
-                    if element['id'] == f"edge-{i}-{j}'":
-                        counter += 1
-                if counter == 0:
-                    graph.add_edge(grafo,origen,destino,True,0)
-                    element = get_element_by_id(grafo,f"edge-{origen['id']}-{destino['id']}")
-                    element['style'] = {'stroke': 'red'}
-
-def cambiar_grafo(presentes, futuros, inicial, resultado1, resultado2):
-    grafo = cambiar_nodos(presentes,futuros, inicial)
-    cambiar_aristas(resultado1, resultado2, grafo)
-    aristas_cortadas(presentes,futuros,grafo)
-
-    flow_styles = {"height": 500, "width": 800}
-    react_flow("graph", elements=grafo, flow_styles=flow_styles)
-
-
 def calculate_lower_bound(original_distribution, divided_dist):
     # Convertir a arreglos de NumPy
     original_distribution = np.array(original_distribution)
@@ -468,89 +375,47 @@ def branch_and_bound_helper(original_distribution, divided_distribution):
 
         return max_diff
 
-    def branch_and_bound_helper(original_distribution, divided_distribution):
-        minimum_value = float('inf')
-        minimum_index = -1
+    stack = [(0, 0)]  # stack of (current_index, current_emd)
 
-    def branch(distributions, original_distribution_copy, current_index, current_emd):
-        nonlocal minimum_value, minimum_index
+    while stack:
+        current_index, current_emd = stack.pop()
 
-        if current_index == len(distributions):
-            return
+        if current_index >= len(divided_distribution):
+            continue
 
-        distribution = distributions[current_index]
-        result_emd = calc_emd(original_distribution_copy, distribution)
+        distribution = divided_distribution[current_index]
+        result_emd = calc_emd(original_distribution, distribution)
 
-        # Actualizar el mínimo si encontramos una menor diferencia
         if result_emd < minimum_value:
             minimum_value = result_emd
             minimum_index = current_index
 
-        # Podar si ya encontramos una diferencia de 0
         if result_emd == 0:
-            return
+            break
 
-        upper_bound = calculate_upper_bound(original_distribution_copy, distributions[current_index])
+        upper_bound = calculate_upper_bound(original_distribution, divided_distribution[current_index])
 
-        # Podar si el límite superior es mayor que el mínimo actual
         if upper_bound < minimum_value:
-            return
+            continue
 
-        branch(distributions, original_distribution_copy, current_index + 1, upper_bound)
-
-    distributions = [divided_dist.flatten().tolist() for divided_dist in divided_distribution]
-    original_distribution_copy = np.copy(original_distribution)
-    branch(distributions, original_distribution_copy, 0, 0)
+        stack.append((current_index + 1, upper_bound))
 
     return minimum_value, minimum_index
 
-def siguiente_letra_mayuscula(letra):
-    if (letra == 'Z'):
-        return 'A'
-    return chr(ord(letra) + 1)
+
 
 def cantidad_nodos():
     global probabilities
     l = len(probabilities)
     cant = 0
-    while(l != 1):
-        l = l/2
+    while l != 1:
+        l = l / 2
         cant += 1
     return cant
 
-def agregar_nodos():
-    grafo = Grafo()
-    global graph
-
-    nombre = 'A'
-    for i in range(cantidad_nodos()):
-        if i == 0:
-            grafo.add_node(graph, nombre, nombre, 150, 70)
-        else:
-            nombre = siguiente_letra_mayuscula(nombre)
-            grafo.add_node(graph, nombre, nombre, 150, (i * 150) + 70)
-
-    nombre = 'A'
-    for i in range(cantidad_nodos()):
-        if i == 0:
-            grafo.add_node(graph, f'{nombre}2', f"{nombre}'", 450, 70)
-        else:
-            nombre = siguiente_letra_mayuscula(nombre)
-            grafo.add_node(graph, f'{nombre}2', f"{nombre}'", 450, (i * 150) + 70)
-
-def agregar_conexiones():
-    grafo = Grafo()
-    global graph
-    for element in graph:
-        for element2 in graph:
-            if 'data' in element and not element['data']['label'].endswith("'"):
-                if 'data' in element2 and element2['data']['label'].endswith("'"):
-                    if element['data']['label'][0] != element2['data']['label'][0]:
-                        graph = grafo.add_edge(graph,element,element2,True,0)
-
 def crear_grafo():
     global graph
-    agregar_nodos()
+    agregar_nodos(cantidad_nodos())
     agregar_conexiones()
     flow_styles = {"height": 8000, "width": 800}
     react_flow("graph", elements=graph, flow_styles=flow_styles)
